@@ -1,10 +1,9 @@
-import './App.css'
 
 function App() {
 
   return (
     <>
-      <p>
+      <p className="font-extrabold text-xl text-red-500">
         Olá
       </p>
         
