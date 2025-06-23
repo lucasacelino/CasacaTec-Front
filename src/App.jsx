@@ -1,14 +1,14 @@
+import SideBar from "./components/layout/SideBar";
 
-function App() {
-
+const App = () => {
   return (
     <>
-      <p className="font-extrabold text-xl text-red-500">
+      {/* <p className="font-extrabold text-xl text-red-500">
         Olá
-      </p>
-        
+      </p> */}
+      <SideBar />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
