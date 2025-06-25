@@ -41,9 +41,9 @@ const SideBar = () => {
                 <span className="text-[#FFFFFF] font-medium">Produtores</span>
               </div>
               {openProducers ? (
-                <ChevronDownIcon className="w-4 h-4" />
+                <ChevronDownIcon className="w-4 h-4 text-white" />
               ) : (
-                <ChevronRightIcon className="w-4 h-4" />
+                <ChevronRightIcon className="w-4 h-4 text-white" />
               )}
             </button>
 
