@@ -8,19 +8,9 @@ const SideBar = () => {
   const [openActivities, setOpenActivities] = useState(true);
 
   return (
-    // <div>SideBar</div>
-    // fixed inset-y-0 left-0 z-40 w-64 bg-[#000000] shadow-lg border-r border-gray-200
-
-    // fixed top-16 left-0 bottom-0 z-40 w-64 bg-[#000000] shadow-lg border-r border-gray-200
-
 
     <aside className="fixed top-16 left-0 bottom-0 z-40 w-64 bg-[#000000] shadow-lg border-r border-gray-200">
-      {/* Cabeçalho */}
-      {/* <div className="flex items-center justify-center h-16 border-b border-gray-200 bg-blue-600">
-        <h1 className="text-white font-bold text-xl">Cotton Manager</h1>
-      </div> */}
 
-      {/* Menu de Navegação */}
       <nav className="p-4 overflow-y-auto h-[calc(100vh-4rem)]">
         <ul className="space-y-1">
           <li>
@@ -98,12 +88,12 @@ const SideBar = () => {
                     className={({ isActive }) =>
                       `flex items-center p-2 pl-3 rounded-lg text-sm transition-colors ${
                         isActive
-                          ? "bg-blue-100 text-[#F9BF80]-600 font-medium"
-                          : "text-red-600 hover:bg-[#F9BF80]-100"
+                          ? "text-[#F9BF80] font-medium"
+                          : "text-white"
                       }`
                     }
                   >
-                    Cadastrar Atividades de Limpeza
+                    Cadastrar atividade de limpeza
                   </NavLink>
                 </li>
               </ul>

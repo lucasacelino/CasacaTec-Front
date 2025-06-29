@@ -3,7 +3,7 @@ import logo from '../../assets/logo_ICC.avif';
 const HeaderLogin = () => {
     return (
       // bg-[#F9BF80] border-b-3 border-[#000000] py-4 px-6 relative - conteúdo anterior
-    <header className="bg-[#F9BF80] border-b-3 border-[#000000] py-4 px-6 sticky top-0 z-50 h-16">
+    <header className="bg-[#F9BF80] border-b-2 border-[#000000] py-2 px-2 sticky top-0 z-50 h-16">
       <div className="flex items-center">
         <img 
           src={logo} 
