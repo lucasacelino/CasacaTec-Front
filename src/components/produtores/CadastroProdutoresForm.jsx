@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import { maskCPF, maskTelefone } from "./utils/mascarasInputs";
+import { fetchCitiesByState, fetchStates } from "../../services/ibgeService";
 
 const CadastroProdutoresForm = () => {
-  const estados = ["Rio Grande do Norte", "São Paulo", "Minas Gerais"];
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    const loadStates = async () => {
+      const estados = await fetchStates();
+      setStates(estados);
+    };
+    loadStates();
+  }, []);
 
   const initialValues = {
     nome: "",
@@ -18,7 +28,6 @@ const CadastroProdutoresForm = () => {
     estado: "",
   };
 
-  // const ano = new Date().getFullYear()
   const validationSchema = Yup.object({
     nome: Yup.string()
       .required("Nome é obrigatório")
@@ -33,10 +42,6 @@ const CadastroProdutoresForm = () => {
     telefone: Yup.string()
       .required("Telefone é obrigatório")
       .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
-    // fidelizacao: Yup.number().required('Fidelização é obrigatória')
-    // .typeError('Informe um ano válido com 4 dígitos')
-    // .integer('Ano deve ser um número inteiro')
-    // .max(ano, 'Ano não pode ser no futuro'),
     fidelizacao: Yup.string()
       .matches(/^\d{4}$/, "O ano deve ter 4 dígitos")
       .test("ano-valido", "Ano não pode ser no futuro", function (value) {
@@ -97,7 +102,7 @@ const CadastroProdutoresForm = () => {
               <Field
                 name="cpf"
                 type="text"
-                className="border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => handleCPFChange(e, setFieldValue)}
                 maxLength="14" // 000.000.000-00
               />
@@ -139,7 +144,7 @@ const CadastroProdutoresForm = () => {
               <Field
                 name="telefone"
                 type="text"
-                className="border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => handleTelefoneChange(e, setFieldValue)}
                 maxLength="15"
               />
@@ -191,7 +196,6 @@ const CadastroProdutoresForm = () => {
               />
             </div>
 
-            {/* Estado */}
             <div>
               <label
                 htmlFor="estado"
@@ -203,11 +207,24 @@ const CadastroProdutoresForm = () => {
                 as="select"
                 name="estado"
                 className="border border-black-500 rounded-md px-4 py-2.5 bg-white text-black"
+                onChange={async (e) => {
+                  const estadoId = e.target.value;
+                  setFieldValue("estado", estadoId);
+                  setFieldValue("cidade", ""); // Reseta a cidade ao mudar o estado
+
+                  // Carrega cidades do estado selecionado
+                  if (estadoId) {
+                    const cidades = await fetchCitiesByState(estadoId);
+                    setCities(cidades);
+                  } else {
+                    setCities([]);
+                  }
+                }}
               >
                 <option value="">Selecione o estado</option>
-                {estados.map((estado) => (
-                  <option key={estado} value={estado}>
-                    {estado}
+                {states.map((estado) => (
+                  <option key={estado.id} value={estado.id}>
+                    {estado.nome} ({estado.sigla})
                   </option>
                 ))}
               </Field>
@@ -216,6 +233,63 @@ const CadastroProdutoresForm = () => {
                 component="div"
                 className="text-red-500 text-sm"
               />
+            </div>
+
+            <div>
+              <label
+                htmlFor="cidade"
+                className="block text-black font-semibold"
+              >
+                Cidade*
+              </label>
+              <Field
+                as="select"
+                name="cidade"
+                className="border border-black-500 rounded-md pl-4 py-2.5 bg-white text-black"
+                // disabled={!values.estado}
+              >
+                <option value="">Selecione a cidade</option>
+                {cities.map((cidade) => (
+                  <option key={cidade.id} value={cidade.id}>
+                    {cidade.nome}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage
+                name="cidade"
+                component="div"
+                className="text-red-500 text-sm"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="telefone"
+                className="block text-black font-semibold"
+              >
+                Telefone*
+              </label>
+              <Field
+                name="telefone"
+                type="text"
+                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) => handleTelefoneChange(e, setFieldValue)}
+                maxLength="15"
+              />
+              <ErrorMessage
+                name="telefone"
+                component="div"
+                className="text-red-500 text-sm"
+              />
+            </div>
+
+            <div className="w-full flex justify-center gap-4 mt-6">
+              <button className="bg-[#000000] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium">
+                Cadastrar limpeza
+              </button>
+              <button className="bg-[#c1121f] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium">
+                Cancelar
+              </button>
             </div>
           </Form>
         )}
