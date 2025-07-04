@@ -1,13 +1,13 @@
-import SideBar from "./layout/SideBar";
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import CadastrarProdutor from "./pages/CadastrarProdutor";
+
+import CadastrarProdutor from "./pages/Produtores/CadastrarProdutor";
 import MainLayout from "./layout/MainLayout";
-import AcompanharProducao from "./pages/AcompanharProducao";
-import LoginPage from "./pages/LoginPage";
+import AcompanharProducao from "./pages/Produtores/AcompanharProducao";
+import LoginPage from "./pages/Login/LoginPage";
 // import CadastrarAtvLimpezaForm from "./components/atividades_limpeza/CadastrarAtvLimpezaForm";
 import CadastrarAtividadeLimpeza from "./pages/CadastrarAtividadeLimpeza";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/Home/HomePage";
 
 const App = () => {
   return (

@@ -2,16 +2,10 @@ import React from "react";
 import { FcGoogle } from "react-icons/fc"; // Ícone do Google
 
 const LoginCard = () => {
-  // const handleGoogleLogin = () => {
-  //   // Adicione aqui a lógica de autenticação com Google sm:text-sm
-  //   console.log("Login com Google clicado");
-  // };
-
   return (
     <div className="flex flex-col items-center p-10 mt-2">
-      {" "}
       <div className="text-center mb-2">
-        <h1 className="text-3xl font-bold mb-1">Login</h1>{" "}
+        <h1 className="text-3xl font-bold mb-1">Login</h1>
         {/* Título um pouco menor */}
         <p className="text-black-600 mb-3 text-2x">
           Use sua conta do Google para acessar o sistema

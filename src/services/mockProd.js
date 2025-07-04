@@ -53,6 +53,60 @@ const dadosProdICC_PB = [
       },
     ],
   },
+  {
+    id: 3,
+    nome_regional: "Solânea",
+    cidades: [
+      {
+        id: 1,
+        nome_cidade: "Borborema",
+        inscritos: 32,
+        hectares: 22,
+        sacos: 23,
+      },
+      {
+        id: 2,
+        nome_cidade: "Casserengue",
+        inscritos: 31,
+        hectares: 4,
+        sacos: 15,
+      },
+      {
+        id: 3,
+        nome_cidade: "Serraria",
+        inscritos: 11,
+        hectares: 6,
+        sacos: 4,
+      },
+    ],
+  },
+  {
+    id: 4,
+    nome_regional: "Araruna",
+    cidades: [
+      {
+        id: 1,
+        nome_cidade: "Tacima",
+        inscritos: 34,
+        hectares: 22,
+        sacos: 23,
+      },
+      {
+        id: 2,
+        nome_cidade: "Dona Inês",
+        inscritos: 11,
+        hectares: 4,
+        sacos: 12,
+      },
+      {
+        id: 3,
+        nome_cidade: "Passa e Fica",
+        inscritos: 15,
+        hectares: 3,
+        sacos: 4,
+      },
+    ],
+  },
 ];
 
 export default dadosProdICC_PB;

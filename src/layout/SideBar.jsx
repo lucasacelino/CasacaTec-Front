@@ -8,9 +8,7 @@ const SideBar = () => {
   const [openActivities, setOpenActivities] = useState(true);
 
   return (
-
     <aside className="fixed top-16 left-0 bottom-0 z-40 w-64 bg-[#000000] shadow-lg border-r border-gray-200">
-
       <nav className="p-4 overflow-y-auto h-[calc(100vh-4rem)]">
         <ul className="space-y-1">
           <li>
@@ -35,9 +33,7 @@ const SideBar = () => {
                     to="/produtores/cadastrar"
                     className={({ isActive }) =>
                       `flex items-center p-2 pl-3 rounded-lg text-sm transition-colors ${
-                        isActive
-                          ? "text-[#F9BF80] font-medium"
-                          : "text-white"
+                        isActive ? "text-[#F9BF80] font-medium" : "text-white"
                       }`
                     }
                   >
@@ -49,9 +45,7 @@ const SideBar = () => {
                     to="/produtores/acompanhamento"
                     className={({ isActive }) =>
                       `flex items-center p-2 pl-3 rounded-lg text-sm transition-colors ${
-                        isActive
-                          ? "text-[#F9BF80] font-medium"
-                          : "text-white"
+                        isActive ? "text-[#F9BF80] font-medium" : "text-white"
                       }`
                     }
                   >
@@ -87,9 +81,7 @@ const SideBar = () => {
                     to="/usina/limpeza"
                     className={({ isActive }) =>
                       `flex items-center p-2 pl-3 rounded-lg text-sm transition-colors ${
-                        isActive
-                          ? "text-[#F9BF80] font-medium"
-                          : "text-white"
+                        isActive ? "text-[#F9BF80] font-medium" : "text-white"
                       }`
                     }
                   >

@@ -1,5 +1,5 @@
-import LoginCard from "../components/login/CardLogin";
-import HeaderLogin from "../components/login/HeaderLogin";
+import LoginCard from "../../components/login/CardLogin";
+import HeaderLogin from "../../components/login/HeaderLogin";
 
 const LoginPage = () => {
   return (

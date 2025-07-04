@@ -9,10 +9,6 @@ const DashboardInfoGeraisSafra = () => {
         <CardItem key={index.id} titulo={dados.titulo} valor={dados.valor} />
       ))}
 
-      {/* <div className="bg-red-500 px-2 py-2">A</div>
-      <div className="bg-red-500 px-2 py-2">B</div>
-      <div className="bg-red-500 px-2 py-2">C</div>
-      <div className="bg-red-500 px-2 py-2">D</div> */}
     </div>
   );
 };

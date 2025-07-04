@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Mousewheel, FreeMode } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/mousewheel';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Mousewheel, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/mousewheel";
 
-import CidadesTable from './CidadesTable';
-import dadosProdICC_PB from '../../../services/mockProd';
+// import CidadesTable from "./DadosSafraCidadesTable";
+import DadosSafraCidadesTable from "./DadosSafraCidadesTable";
 
-const CarroseButtons = () => {
-
+const CarroselButtonsRegionais = ({ UF }) => {
   const [regionalSelecionada, setRegionalSelecionada] = useState(null);
   const [cidadesFiltradas, setCidadesFiltradas] = useState([]);
 
@@ -19,8 +18,9 @@ const CarroseButtons = () => {
     setCidadesFiltradas(regional.cidades);
   };
 
-  const dadosParaTabela = regionalSelecionada ? cidadesFiltradas : 
-    dadosProdICC_PB.flatMap(regional => regional.cidades);
+  const dadosParaTabela = regionalSelecionada
+    ? cidadesFiltradas
+    : UF.flatMap((regional) => regional.cidades);
 
   return (
     <div className="w-full max-w-6xl mt-4">
@@ -29,7 +29,7 @@ const CarroseButtons = () => {
         <Swiper
           modules={[Mousewheel, FreeMode]}
           spaceBetween={10}
-          slidesPerView={'auto'}
+          slidesPerView={"auto"}
           mousewheel={{
             forceToAxis: true,
             sensitivity: 1,
@@ -43,33 +43,20 @@ const CarroseButtons = () => {
           resistanceRatio={0}
           className="!overflow-visible"
         >
-          {/* Botão "Todas as Regionais" */}
-          {/* <SwiperSlide className="!w-auto">
-            <button
-              className={`px-6 py-2 rounded-full font-medium text-sm whitespace-nowrap transition-all duration-200 ${
-                !regionalSelecionada 
-                  ? 'bg-[#FFA94B] text-white shadow-md' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-              onClick={() => {
-                setRegionalSelecionada(null);
-                setCidadesFiltradas([]);
-              }}
-            >
-              Todas as Regionais
-            </button>
-          </SwiperSlide> */}
-
-          {/* Botões das Regionais */}
-          {dadosProdICC_PB.map((regional) => (
+          {UF.map((regional) => (
             <SwiperSlide key={regional.id} className="!w-auto">
               <button
                 className={`px-6 py-2 rounded-sm font-medium text-sm whitespace-nowrap transition-all duration-200 ${
                   regionalSelecionada === regional.nome_regional
-                    ? 'bg-[#FFA94B] text-[#000000]'
-                    : 'bg-[#000000] text-[#FFA94B]'
+                    ? "bg-[#FFA94B] text-[#000000]"
+                    : "bg-[#000000] text-[#FFA94B]"
                 }`}
-                onClick={() => handleRegionalClick(regional)}
+                onClick={() => {
+                  handleRegionalClick(regional);
+                  // setCidadesFiltradas(cidadesFiltradas[0]);
+                }}
+
+                // handleRegionalClick(regional)}
               >
                 {regional.nome_regional}
               </button>
@@ -78,10 +65,9 @@ const CarroseButtons = () => {
         </Swiper>
       </div>
 
-      {/* Tabela de Cidades */}
-      <CidadesTable data={dadosParaTabela} />
+      <DadosSafraCidadesTable data={dadosParaTabela} />
     </div>
   );
 };
 
-export default CarroseButtons;
+export default CarroselButtonsRegionais;
