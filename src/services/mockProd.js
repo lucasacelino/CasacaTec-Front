@@ -51,6 +51,13 @@ const dadosProdICC_PB = [
         hectares: 6,
         sacos: 4,
       },
+      {
+        id: 4,
+        nome_cidade: "Pilões",
+        inscritos: 1,
+        hectares: 6,
+        sacos: 3,
+      },
     ],
   },
   {
@@ -104,6 +111,78 @@ const dadosProdICC_PB = [
         inscritos: 15,
         hectares: 3,
         sacos: 4,
+      },
+    ],
+  },
+  {
+    id: 5,
+    nome_regional: "Souza",
+    cidades: [
+      {
+        id: 1,
+        nome_cidade: "Vierópolis",
+        inscritos: 34,
+        hectares: 22,
+        sacos: 23,
+      },
+    ],
+  },
+  {
+    id: 6,
+    nome_regional: "Patos",
+    cidades: [
+      {
+        id: 1,
+        nome_cidade: "Vara",
+        inscritos: 34,
+        hectares: 22,
+        sacos: 23,
+      },
+    ],
+  },
+   {
+    id: 7,
+    nome_regional: "Monteiro",
+    cidades: [
+      {
+        id: 1,
+        nome_cidade: "ista",
+        inscritos: 34,
+        hectares: 22,
+        sacos: 23,
+      },
+    ],
+  },
+  {
+    id: 8,
+    nome_regional: "Princesa Isabel",
+    cidades: [
+      {
+        id: 1,
+        nome_cidade: "Caiana",
+        inscritos: 34,
+        hectares: 22,
+        sacos: 23,
+      },
+    ],
+  },
+  {
+    id: 9,
+    nome_regional: "Mamanguape",
+    cidades: [
+      {
+        id: 1,
+        nome_cidade: "Rio Tinto",
+        inscritos: 34,
+        hectares: 22,
+        sacos: 23,
+      },
+      {
+        id: 2,
+        nome_cidade: "Mataraca",
+        inscritos: 3,
+        hectares: 2,
+        sacos: 13,
       },
     ],
   },

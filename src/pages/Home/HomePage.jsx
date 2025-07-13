@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
 
 import DashboardInfoGeraisSafra from "../../components/paginainicial/dashboards/DashboardInfoGeraisSafra";
-// import CarroseButtons from "../../components/paginainicial/table/CarroseButtons";
 import CarroselButtonsRegionais from "../../components/paginainicial/table/CarroseButtons";
 
 import dadosProdICC_PB from "../../services/mockProd";
 import dadosProdICC_RN from "../../services/mockProd2";
 
+
 const HomePage = () => {
   const anoAtual = new Date().getFullYear();
 
   // const [ativar, setAtivar] = useState(false);
-  const [selecionaUf, setSelecionarUF] = useState("Paraíba");
+  const [selecionaUF, setSelecionarUF] = useState("PB");
   const [ufSelecionada, setUFselecionada] = useState([]);
 
   useEffect(() => {
-    if (selecionaUf === "Paraíba") {
+    if (selecionaUF === "PB") {
       setUFselecionada(dadosProdICC_PB);
     } else {
       setUFselecionada(dadosProdICC_RN);
     }
-  }, [selecionaUf]);
+  }, [selecionaUF]);
 
 
   return (
@@ -41,16 +41,17 @@ const HomePage = () => {
       <div className="flex justify-center gap-4 mt-2">
         <button
           className={
-            "px-4 py-3 rounded-sm font-semibold text-lg bg-[#000000] text-[#FFA94B]"
-          }
-          onClick={() => setSelecionarUF("Paraíba")}
+            `px-4 py-3 rounded-sm font-semibold text-lg ${selecionaUF === "PB" ? "bg-[#FFA94B] text-[#000000]" : "bg-[#000000] text-[#FFA04B]"}
+          `}
+          onClick={() => setSelecionarUF("PB")}
         >
           Paraíba
         </button>
 
         <button
           className={
-            "px-4 py-3 rounded-sm font-semibold text-lg bg-[#000000] text-[#FFA94B]"
+             `px-4 py-3 rounded-sm font-semibold text-lg ${selecionaUF === "RN" ? "bg-[#FFA94B] text-[#000000]" : "bg-[#000000] text-[#FFA04B]"}
+          `
           }
           onClick={() => setSelecionarUF("RN")}
         >
@@ -59,6 +60,7 @@ const HomePage = () => {
 
       </div>
 
+      <p className="text-lg font-medium">Regionais - {selecionaUF}</p>
       <CarroselButtonsRegionais UF={ufSelecionada} />
       {/* {ufSelecionada.length > 0 && (
         <CarroselButtonsRegionais UF={ufSelecionada} />

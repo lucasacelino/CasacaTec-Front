@@ -65,6 +65,26 @@ const dadosProdICC_RN = [
         sacos: 23,
       }
     ],
+  },
+  {
+    id: 4,
+    nome_regional: "João Cãmara",
+    cidades: [
+      {
+        id: 1,
+        nome_cidade: "Guamaré",
+        inscritos: 32,
+        hectares: 22,
+        sacos: 23,
+      },
+      {
+        id: 2,
+        nome_cidade: "Jandaíra",
+        inscritos: 22,
+        hectares: 7,
+        sacos: 7,
+      }
+    ],
   }
 
 ];

@@ -10,11 +10,9 @@ export const fetchStates = async () => {
   return filteredStates.sort((a, b) => a.nome.localeCompare(b.nome));
 };
 
-
-export const fetchCitiesByState = async (stateId) => {
-  if (!stateId) return [];
-  const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${stateId}/municipios`);
+export const fetchCitiesByState = async (siglaUF) => {
+  if (!siglaUF) return [];
+  const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${siglaUF}/municipios`);
   const cities = await response.json();
   return cities.sort((a, b) => a.nome.localeCompare(b.nome)); // Ordena por nome
 };
-

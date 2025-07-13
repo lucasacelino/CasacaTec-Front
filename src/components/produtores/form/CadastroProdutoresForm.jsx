@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import axios from "axios";
 import * as Yup from "yup";
 
-import { maskCPF, maskTelefone } from "./utils/mascarasInputs";
-import { fetchCitiesByState, fetchStates } from "../../services/ibgeService";
+import { maskCPF, maskTelefone } from "../utils/mascarasInputs";
+// import { SucessDialog } from "../Modal/SucessDialog";
+import { SuccessDialog } from "../Modal/SuccessDialog";
+import { fetchCitiesByState, fetchStates } from "../../../services/ibgeService";
+import toast from "react-hot-toast";
+import { differenceInYears } from "date-fns";
 
 const CadastroProdutoresForm = () => {
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
+  const [estados, setEstados] = useState([]);
+  const [cidades, setCidades] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     const loadStates = async () => {
       const estados = await fetchStates();
-      setStates(estados);
+      setEstados(estados);
     };
     loadStates();
   }, []);
@@ -21,11 +27,14 @@ const CadastroProdutoresForm = () => {
   const initialValues = {
     nome: "",
     cpf: "",
-    nascimento: "",
+    sexo: "",
+    data_nascimento: "",
     telefone: "",
     fidelizacao: "",
     endereco: "",
     estado: "",
+    cidade: "",
+    regionnal: ""
   };
 
   const validationSchema = Yup.object({
@@ -36,9 +45,22 @@ const CadastroProdutoresForm = () => {
     cpf: Yup.string()
       .required("CPF é obrigatório")
       .matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido"),
-    nascimento: Yup.date()
+    sexo: Yup.string().required("Sexo é obrigatório"),
+    data_nascimento: Yup.date()
       .required("Data de nascimento é obrigatória")
-      .max(new Date(), "Data não pode ser no futuro"),
+      .max(new Date(), "Data não pode ser no futuro")
+      .test("Produtor menor de idade", "Produtor não pode ser menor de idade", (idade) => {
+        const dataNascimento = idade;
+        const dataAtual = new Date();
+        const diferencaAnos = differenceInYears(dataAtual, dataNascimento);
+        return diferencaAnos >= 18;
+      })
+      .test("ano-valido", "Ano inválido", (value) => {
+        const ano = value.getFullYear();
+        const anoString = value.getFullYear().toString();
+        const anoAtual = new Date().getFullYear();
+        return anoString.length === 4 && ano > 1920 && ano <= anoAtual;
+      }),
     telefone: Yup.string()
       .required("Telefone é obrigatório")
       .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
@@ -48,15 +70,25 @@ const CadastroProdutoresForm = () => {
         const ano = parseInt(value, 10);
         return ano <= new Date().getFullYear();
       })
+      .test("ano incompatível", "O ano de fidelização é incompatível com a data de nascimento", function (ano) {
+        const anoFidelizacao = parseInt(ano, 10);
+        const dataNascimento = this.parent.data_nascimento;
+        return anoFidelizacao > new Date(dataNascimento).getFullYear();
+      })
+      .test("Ano incomapátivel", "Maioridade não atingida no ano de fidelização", function (value) {
+        const anoFidelizacao = parseInt(value, 10);
+        const dataNascimento = this.parent.data_nascimento;
+        const anoNascimento = new Date(dataNascimento).getFullYear()
+        const diferencaAnos = anoFidelizacao - anoNascimento;
+        return diferencaAnos >= 18;
+        
+      })
       .required("Ano de fidelização é obrigatório"),
-    endereco: Yup.string().required("Endereço é obrigatório"),
+    endereco: Yup.string().required("Endereço é obrigatório").matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+    .min(2, "O nome deve ter pelo menos 2 letras"),
     estado: Yup.string().required("Estado é obrigatório"),
+    cidade: Yup.string().required("Cidade é obrigatório"),
   });
-
-  const onSubmit = (values) => {
-    console.log(values);
-    alert("Formulário enviado com sucesso!");
-  };
 
   const handleCPFChange = (e, setFieldValue) => {
     const formattedValue = maskCPF(e.target.value);
@@ -68,16 +100,45 @@ const CadastroProdutoresForm = () => {
     setFieldValue("telefone", formattedValue);
   };
 
+  const handleSubmit = async (values, { resetForm }) => {
+    const dadosEnvio = {
+      nome: values.nome,
+      cpf: values.cpf,
+      sexo: values.sexo,
+      data_nascimento: values.data_nascimento,
+      telefone: values.telefone,
+      fidelizacao: values.fidelizacao,
+      endereco: values.endereco,
+      estado: values.estado,
+      cidade: values.cidade,
+      regional: values.regional
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/produtores",
+        dadosEnvio
+      );
+      console.log("Produtor cadastrado com sucesso!");
+      resetForm();
+      setOpenDialog(true);
+      console.log(response.data);
+    } catch (error) {
+      toast.error("Erro ao Cadastrar produtor");
+      console.log("error", error);
+    }
+  };
+
   return (
-    <div className="w-full bg-[#FFFFFF] border-t-4 border-[#F9BF80] pt-2">
+    <div className="w-full bg-[#FFFFFF] border-t-4 border-[#FFB059] pt-2">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         {({ setFieldValue }) => (
           <Form className="flex flex-wrap gap-x-6 gap-y-4">
-            {/* Nome */}
+
             <div>
               <label htmlFor="nome" className="block text-black font-semibold">
                 Nome completo*
@@ -94,7 +155,6 @@ const CadastroProdutoresForm = () => {
               />
             </div>
 
-            {/* CPF */}
             <div>
               <label htmlFor="cpf" className="block text-black font-semibold">
                 CPF*
@@ -113,27 +173,49 @@ const CadastroProdutoresForm = () => {
               />
             </div>
 
-            {/* Data de Nascimento */}
             <div>
               <label
-                htmlFor="nascimento"
+                htmlFor="sexo"
                 className="block text-black font-semibold"
               >
-                Data de Nascimento*
+                Sexo*
               </label>
               <Field
-                name="nascimento"
-                type="date"
-                className="border border-black-500 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+                as="select"
+                name="sexo"
+                className="border border-black-300 rounded-md pl-4 py-2.5 bg-white text-black"
+              >
+                <option value="">Selecione a cidade</option>
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
+              </Field>
               <ErrorMessage
-                name="nascimento"
+                name="sexo"
                 component="div"
                 className="text-red-500 text-sm"
               />
             </div>
 
-            {/* Telefone */}
+            <div>
+              <label
+                htmlFor="data_nascimento"
+                className="block text-black font-semibold"
+              >
+                Data de Nascimento*
+              </label>
+              <Field
+                name="data_nascimento"
+                type="date"
+                className="w-[160px] border border-black-500 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                // onChange={(e) => handleDataChange(e, setFieldValue)}
+              />
+              <ErrorMessage
+                name="data_nascimento"
+                component="div"
+                className="text-red-500 text-sm"
+              />
+            </div>
+
             <div>
               <label
                 htmlFor="telefone"
@@ -155,7 +237,6 @@ const CadastroProdutoresForm = () => {
               />
             </div>
 
-            {/* Fidelização */}
             <div>
               <label
                 htmlFor="fidelizacao"
@@ -176,7 +257,6 @@ const CadastroProdutoresForm = () => {
               />
             </div>
 
-            {/* Endereço */}
             <div>
               <label
                 htmlFor="endereco"
@@ -208,22 +288,22 @@ const CadastroProdutoresForm = () => {
                 name="estado"
                 className="border border-black-500 rounded-md px-4 py-2.5 bg-white text-black"
                 onChange={async (e) => {
-                  const estadoId = e.target.value;
-                  setFieldValue("estado", estadoId);
+                  const sigla = e.target.value;
+                  setFieldValue("estado", sigla);
                   setFieldValue("cidade", ""); // Reseta a cidade ao mudar o estado
 
                   // Carrega cidades do estado selecionado
-                  if (estadoId) {
-                    const cidades = await fetchCitiesByState(estadoId);
-                    setCities(cidades);
+                  if (sigla) {
+                    const cidades = await fetchCitiesByState(sigla);
+                    setCidades(cidades);
                   } else {
-                    setCities([]);
+                    setCidades([]);
                   }
                 }}
               >
                 <option value="">Selecione o estado</option>
-                {states.map((estado) => (
-                  <option key={estado.id} value={estado.id}>
+                {estados.map((estado) => (
+                  <option key={estado.sigla} value={estado.sigla}>
                     {estado.nome} ({estado.sigla})
                   </option>
                 ))}
@@ -249,8 +329,8 @@ const CadastroProdutoresForm = () => {
                 // disabled={!values.estado}
               >
                 <option value="">Selecione a cidade</option>
-                {cities.map((cidade) => (
-                  <option key={cidade.id} value={cidade.id}>
+                {cidades.map((cidade) => (
+                  <option key={cidade.nome} value={cidade.nome}>
                     {cidade.nome}
                   </option>
                 ))}
@@ -264,36 +344,49 @@ const CadastroProdutoresForm = () => {
 
             <div>
               <label
-                htmlFor="telefone"
+                htmlFor="regional"
                 className="block text-black font-semibold"
               >
-                Telefone*
+                Regional*
               </label>
               <Field
-                name="telefone"
-                type="text"
-                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onChange={(e) => handleTelefoneChange(e, setFieldValue)}
-                maxLength="15"
-              />
+                as="select"
+                name="regional"
+                className="border border-black-500 rounded-md pl-4 py-2.5 bg-white text-black"
+                // disabled={!values.estado}
+              >
+                <option value="">Selecione a regional</option>
+                {cidades.map((cidade) => (
+                  <option key={cidade.nome} value={cidade.nome}>
+                    {cidade.nome}
+                  </option>
+                ))}
+              </Field>
               <ErrorMessage
-                name="telefone"
+                name="regional"
                 component="div"
                 className="text-red-500 text-sm"
               />
             </div>
 
             <div className="w-full flex justify-center gap-4 mt-6">
-              <button className="bg-[#000000] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium">
-                Cadastrar limpeza
+              <button
+                type="submit"
+                className="bg-[#000000] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
+              >
+                Cadastrar Produtor
               </button>
-              <button className="bg-[#c1121f] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium">
+              <button
+                type="button"
+                className="bg-[#c1121f] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
+              >
                 Cancelar
               </button>
             </div>
           </Form>
         )}
       </Formik>
+      <SuccessDialog isOpen={openDialog} onClose={() => setOpenDialog(false)} />
     </div>
   );
 };

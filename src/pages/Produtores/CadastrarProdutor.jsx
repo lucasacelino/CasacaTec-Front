@@ -1,5 +1,5 @@
 import React from 'react'
-import CadastroProdutoresForm from '../../components/produtores/CadastroProdutoresForm';
+import CadastroProdutoresForm from '../../components/produtores/form/CadastroProdutoresForm';
 
 const CadastrarProdutor = () => {
   return (
