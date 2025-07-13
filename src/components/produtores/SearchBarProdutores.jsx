@@ -123,6 +123,8 @@ const SearchBarProdutores = () => {
     // Se não há erros, mostrar resultado
     if (!erroNome && !erroEstado && !erroCidade) {
       setMostrarResultado(true);
+    } else if ((!erroNome && erroEstado && erroCidade) || (erroNome && !erroEstado && !erroCidade)) {
+      setMostrarResultado(true);
     } else {
       setMostrarResultado(false);
     }
@@ -161,14 +163,18 @@ const SearchBarProdutores = () => {
           value={nomeProdutor}
           onChange={handleNomeChange}
           onBlur={handleNomeBlur}
-          className={`w-full border rounded-md pl-2 py-2 ${
-            erros.nomeProdutor ? "border-red-500 bg-red-50" : "border-black-300"
+          // className={`w-full border rounded-md pl-2 py-2 ${
+          //   erros.nomeProdutor ? "border-red-500 bg-red-50" : "border-black-300"
+          // }`} 
+           className={`w-full border rounded-md pl-2 py-2 ${
+            !estado ? "border-black-300" : ""
           }`}
-          // className="border border-black-500 rounded-md pl-1 py-2"
+          
         />
-        {erros.nomeProdutor && (
+        {/* {erros.nomeProdutor && (
           <p className="text-red-500 text-sm mt-1">{erros.nomeProdutor}</p>
-        )}
+        )} */}
+        {estado ? <span></span> : <p className="text-red-500 text-sm mt-1">{erros.nomeProdutor}</p>}
       </div>
 
       <div>
@@ -180,17 +186,20 @@ const SearchBarProdutores = () => {
           onChange={handleEstadoChange}
           onBlur={handleEstadoBlur}
           id="estado"
-          // className="border border-black-500 rounded-md pl-2 py-2.5"
+          // className={`w-full border rounded-md pl-2 py-2.5 ${
+          //   erros.estado ? "border-red-500 bg-red-50" : "border-black-300"
+          // }`}
           className={`w-full border rounded-md pl-2 py-2.5 ${
-            erros.estado ? "border-red-500 bg-red-50" : "border-black-300"
+            !nomeProdutor ? "border-black-300" : ""
           }`}
         >
           <option value="">Selecione um estado</option>
           <option value="Paraíba">Paraíba</option>
         </select>
-        {erros.estado && (
+        {/* {erros.estado && (
           <p className="text-red-500 text-sm mt-1">{erros.estado}</p>
-        )}
+        )} */}
+        {nomeProdutor ? <span></span> : <p className="text-red-500 text-sm mt-1">{erros.estado}</p>}
       </div>
 
       <div>
@@ -202,7 +211,6 @@ const SearchBarProdutores = () => {
           onChange={handleCidadeChange}
           onBlur={handleCidadeBlur}
           id="cidade"
-          // className="border border-black-500 rounded-md pl-2 py-2.5"
           className={`w-full border rounded-md pl-2 py-2.5 ${
             erros.cidade ? "border-red-500 bg-red-50" : "border-black-300"
           } ${!estado ? "bg-gray-100 cursor-not-allowed" : ""}`}

@@ -62,9 +62,6 @@ const HomePage = () => {
 
       <p className="text-lg font-medium">Regionais - {selecionaUF}</p>
       <CarroselButtonsRegionais UF={ufSelecionada} />
-      {/* {ufSelecionada.length > 0 && (
-        <CarroselButtonsRegionais UF={ufSelecionada} />
-      )} */}
     </>
   );
 };
