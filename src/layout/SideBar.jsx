@@ -1,4 +1,3 @@
-// import React from 'react'
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
@@ -30,7 +29,7 @@ const SideBar = () => {
               <ul className="ml-8 mt-1 space-y-1">
                 <li>
                   <NavLink
-                    to="/produtores/cadastrar"
+                    to="/produtores/cadastrarprodutor"
                     className={({ isActive }) =>
                       `flex items-center p-2 pl-3 rounded-lg text-sm transition-colors ${
                         isActive ? "text-[#F9BF80] font-medium" : "text-white"
@@ -86,6 +85,18 @@ const SideBar = () => {
                     }
                   >
                     Cadastrar atividade de limpeza
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/usina/atividadescadastradas"
+                    className={({ isActive }) =>
+                      `flex items-center p-2 pl-3 rounded-lg text-sm transition-colors ${
+                        isActive ? "text-[#F9BF80] font-medium" : "text-white"
+                      }`
+                    }
+                  >
+                    Atividades de limpeza cadastradas
                   </NavLink>
                 </li>
               </ul>

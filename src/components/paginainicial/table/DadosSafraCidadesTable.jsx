@@ -11,12 +11,12 @@ const DadosSafraCidadesTable = ({ data }) => {
               <th className="text-[#FFA94B] py-2 px-4 border-b border-gray-200 text-left">
                 Inscritos
               </th>
-              <th className="text-[#FFA94B] py-2 px-4 border-b border-gray-200 text-left">
+              {/* <th className="text-[#FFA94B] py-2 px-4 border-b border-gray-200 text-left">
                 Sacos distribuidos
               </th>
               <th className="text-[#FFA94B] py-2 px-4 border-b border-gray-200 text-left">
                 Hectares
-              </th>
+              </th> */}
             </tr>
           </thead>
           <tbody>
@@ -31,12 +31,12 @@ const DadosSafraCidadesTable = ({ data }) => {
                 <td className="py-2 px-4 border-b border-gray-400 font-medium">
                   {datas.inscritos}
                 </td>
-                <td className="py-2 px-4 border-b border-gray-400 font-medium">
+                {/* <td className="py-2 px-4 border-b border-gray-400 font-medium">
                   {datas.sacos}
                 </td>
                 <td className="py-2 px-4 border-b border-gray-400 font-medium">
                   {datas.hectares}
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>

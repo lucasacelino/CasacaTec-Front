@@ -38,7 +38,7 @@ export function SuccessDialog({ isOpen, onClose }) {
           </h3>
           <div className="mt-2">
             <p className="text-base text-black-500">
-              O cadastro do produtor foi efetuado com sucesso.
+              A atividade de limpeza foi cadastrada com sucesso.
             </p>
           </div>
         </div>

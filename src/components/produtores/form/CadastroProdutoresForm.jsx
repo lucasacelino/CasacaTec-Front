@@ -1,60 +1,73 @@
 import React, { useEffect, useState } from "react";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import axios from "axios";
 import * as Yup from "yup";
 
 import { maskCPF, maskTelefone } from "../utils/mascarasInputs";
-// import { SucessDialog } from "../Modal/SucessDialog";
 import { SuccessDialog } from "../Modal/SuccessDialog";
 import { fetchCitiesByState, fetchStates } from "../../../services/ibgeService";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { differenceInYears } from "date-fns";
+import axios from "axios";
 
 const CadastroProdutoresForm = () => {
   const [estados, setEstados] = useState([]);
   const [cidades, setCidades] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const loadStates = async () => {
+    const fetchEstados = async () => {
       const estados = await fetchStates();
       setEstados(estados);
     };
-    loadStates();
+    fetchEstados();
   }, []);
 
   const initialValues = {
-    nome: "",
+    nomeCompleto: "",
     cpf: "",
     sexo: "",
-    data_nascimento: "",
+    dataNascimento: "",
     telefone: "",
     fidelizacao: "",
     endereco: "",
-    estado: "",
-    cidade: "",
-    regionnal: ""
+    uf: "",
+    nomeMunicipio: "",
+    nomeRegional: "",
   };
 
   const validationSchema = Yup.object({
-    nome: Yup.string()
+    nomeCompleto: Yup.string()
       .required("Nome é obrigatório")
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "Nome completo não pode ter espaços no início ou fim",
+        (value) => {
+          return value ? value.trim() === value : true;
+        }
+      )
       .min(2, "O nome deve ter pelo menos 2 letras"),
     cpf: Yup.string()
       .required("CPF é obrigatório")
       .matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido"),
     sexo: Yup.string().required("Sexo é obrigatório"),
-    data_nascimento: Yup.date()
+    dataNascimento: Yup.date()
       .required("Data de nascimento é obrigatória")
       .max(new Date(), "Data não pode ser no futuro")
-      .test("Produtor menor de idade", "Produtor não pode ser menor de idade", (idade) => {
-        const dataNascimento = idade;
-        const dataAtual = new Date();
-        const diferencaAnos = differenceInYears(dataAtual, dataNascimento);
-        return diferencaAnos >= 18;
-      })
+      .test(
+        "Produtor menor de idade",
+        "Produtor não pode ser menor de idade",
+        (idade) => {
+          const dataNascimento = idade;
+          const dataAtual = new Date();
+          const diferencaAnos = differenceInYears(dataAtual, dataNascimento);
+          return diferencaAnos >= 18;
+        }
+      )
       .test("ano-valido", "Ano inválido", (value) => {
         const ano = value.getFullYear();
         const anoString = value.getFullYear().toString();
@@ -64,30 +77,79 @@ const CadastroProdutoresForm = () => {
     telefone: Yup.string()
       .required("Telefone é obrigatório")
       .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
-    fidelizacao: Yup.string()
-      .matches(/^\d{4}$/, "O ano deve ter 4 dígitos")
-      .test("ano-valido", "Ano não pode ser no futuro", function (value) {
-        const ano = parseInt(value, 10);
-        return ano <= new Date().getFullYear();
+    // fidelizacao: Yup.string()
+    //   .matches(/^\d{4}$/, "O ano deve ter 4 dígitos")
+    //   .test("ano-valido", "Ano não pode ser no futuro", function (value) {
+    //     const ano = parseInt(value, 10);
+    //     return ano <= new Date().getFullYear();
+    //   })
+    //   .test(
+    //     "ano incompatível",
+    //     "O ano de fidelização é incompatível com a data de nascimento",
+    //     function (ano) {
+    //       const anoFidelizacao = parseInt(ano, 10);
+    //       const dataNascimento = this.parent.dataNascimento;
+    //       return anoFidelizacao > new Date(dataNascimento).getFullYear();
+    //     }
+    //   )
+    //   .test(
+    //     "Ano incomapátivel",
+    //     "Maioridade não atingida no ano de fidelização",
+    //     function (value) {
+    //       const anoFidelizacao = parseInt(value, 10);
+    //       const dataNascimento = this.parent.dataNascimento;
+    //       const anoNascimento = new Date(dataNascimento).getFullYear();
+    //       const diferencaAnos = anoFidelizacao - anoNascimento;
+    //       return diferencaAnos >= 18;
+    //     }
+    //   )
+    //   .required("Ano de fidelização é obrigatório"),
+    fidelizacao: Yup.date()
+      .required("Data de fidelização é obrigatório")
+      .max(new Date(), "Data não pode ser no futuro")
+      .test("ano-valido", "Ano inválido", (value) => {
+        const ano = value.getFullYear();
+        const anoString = value.getFullYear().toString();
+        const anoAtual = new Date().getFullYear();
+        return anoString.length === 4 && ano > 1920 && ano <= anoAtual;
       })
-      .test("ano incompatível", "O ano de fidelização é incompatível com a data de nascimento", function (ano) {
-        const anoFidelizacao = parseInt(ano, 10);
-        const dataNascimento = this.parent.data_nascimento;
-        return anoFidelizacao > new Date(dataNascimento).getFullYear();
-      })
-      .test("Ano incomapátivel", "Maioridade não atingida no ano de fidelização", function (value) {
-        const anoFidelizacao = parseInt(value, 10);
-        const dataNascimento = this.parent.data_nascimento;
-        const anoNascimento = new Date(dataNascimento).getFullYear()
-        const diferencaAnos = anoFidelizacao - anoNascimento;
-        return diferencaAnos >= 18;
-        
-      })
-      .required("Ano de fidelização é obrigatório"),
-    endereco: Yup.string().required("Endereço é obrigatório").matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
-    .min(2, "O nome deve ter pelo menos 2 letras"),
-    estado: Yup.string().required("Estado é obrigatório"),
-    cidade: Yup.string().required("Cidade é obrigatório"),
+      .test(
+        "x",
+        "O ano de fidelização é incompatível com a data de nascimento",
+        function (value) {
+          const anoFidelizacao = new Date(value).getFullYear();
+          const dataNascimento = new Date(
+            this.parent.dataNascimento
+          ).getFullYear();
+          return anoFidelizacao >= dataNascimento;
+          // const anoNascimento = new Date(dataNascimento).getFullYear();
+          // return anoFidelizacao > anoNascimento;
+        }
+      )
+      .test(
+        "ano incompatível",
+        "Maioridade não atingida no ano de fidelização",
+        function (value) {
+          const anoFidelizacao = new Date(value).getFullYear();
+          const dataNascimento = this.parent.dataNascimento;
+          const anoNascimento = new Date(dataNascimento).getFullYear();
+          const diferencaAnos = anoFidelizacao - anoNascimento;
+          return diferencaAnos >= 18;
+        }
+      ),
+    endereco: Yup.string()
+      .required("Endereço é obrigatório")
+      .matches(/^[A-Za-zÀ-ú\s]+$/, "O endereço deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "Endereço não pode ter espaços no início ou fim",
+        (value) => {
+          return value ? value.trim() === value : true;
+        }
+      )
+      .min(2, "O nome deve ter pelo menos 2 letras"),
+    uf: Yup.string().required("Estado é obrigatório"),
+    nomeMunicipio: Yup.string().required("Cidade é obrigatório"),
   });
 
   const handleCPFChange = (e, setFieldValue) => {
@@ -101,20 +163,38 @@ const CadastroProdutoresForm = () => {
   };
 
   const handleSubmit = async (values, { resetForm }) => {
+    const [anoNasc, mesNasc, diaNasc] = values.dataNascimento.split("-");
+
+    const dataNascFormatada = `${diaNasc}/${mesNasc}/${anoNasc}`;
+
+    const [ano, mes, dia] = values.fidelizacao.split("-");
+    const dte = `${dia}/${mes}/${ano}`;
+
+    // const municipio = {
+    //   nomeMunicipio: values.nomeMunicipio,
+    //   uf: values.uf,
+    //   nomeRegional: values.nomeRegional,
+    // };
+
     const dadosEnvio = {
-      nome: values.nome,
+      nomeCompleto: values.nomeCompleto,
       cpf: values.cpf,
       sexo: values.sexo,
-      data_nascimento: values.data_nascimento,
+      dataNascimento: dataNascFormatada,
       telefone: values.telefone,
-      fidelizacao: values.fidelizacao,
+      fidelizacao: dte,
       endereco: values.endereco,
-      estado: values.estado,
-      cidade: values.cidade,
-      regional: values.regional
+      // municipio: municipio,
+      nomeMunicipio: values.nomeMunicipio,
+      uf: values.uf,
+      nomeRegional: values.nomeRegional,
     };
 
+    console.log("Dados que serão enviados:", dadosEnvio);
+
     try {
+      // const response = await axios.post("http://localhost:8080/produtores/produtor", dadosEnvio);
+      // const response = await axios.post("http://localhost:8080/produtores/produtor", dadosEnvio);
       const response = await axios.post(
         "http://localhost:3000/produtores",
         dadosEnvio
@@ -124,13 +204,18 @@ const CadastroProdutoresForm = () => {
       setOpenDialog(true);
       console.log(response.data);
     } catch (error) {
-      toast.error("Erro ao Cadastrar produtor");
-      console.log("error", error);
+      if (error.response) {
+        console.error("Erro do backend:", error.response.data);
+        toast.error(`Erro: ${error.response.data.message}`);
+      } else {
+        console.error("Erro na requisição:", error.message);
+        toast.error("Falha na conexão com o servidor");
+      }
     }
   };
 
   return (
-    <div className="w-full bg-[#FFFFFF] border-t-4 border-[#FFB059] pt-2">
+    <div className="w-full bg-[#FFFFFF] border-t-2 border-[#FF6B00] pt-2">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -138,20 +223,22 @@ const CadastroProdutoresForm = () => {
       >
         {({ setFieldValue }) => (
           <Form className="flex flex-wrap gap-x-6 gap-y-4">
-
-            <div>
-              <label htmlFor="nome" className="block text-black font-semibold">
+            <div className="max-w-[230px]">
+              <label
+                htmlFor="nomeCompleto"
+                className="block text-black font-semibold"
+              >
                 Nome completo*
               </label>
               <Field
-                name="nome"
+                name="nomeCompleto"
                 type="text"
-                className="w-[230px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-[230px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
               />
               <ErrorMessage
-                name="nome"
+                name="nomeCompleto"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm whitespace-pre-line leading-tight"
               />
             </div>
 
@@ -162,22 +249,19 @@ const CadastroProdutoresForm = () => {
               <Field
                 name="cpf"
                 type="text"
-                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
                 onChange={(e) => handleCPFChange(e, setFieldValue)}
                 maxLength="14" // 000.000.000-00
               />
               <ErrorMessage
                 name="cpf"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="sexo"
-                className="block text-black font-semibold"
-              >
+              <label htmlFor="sexo" className="block text-black font-semibold">
                 Sexo*
               </label>
               <Field
@@ -192,27 +276,27 @@ const CadastroProdutoresForm = () => {
               <ErrorMessage
                 name="sexo"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm"
               />
             </div>
 
-            <div>
+            <div className="max-w-[160px]">
               <label
-                htmlFor="data_nascimento"
+                htmlFor="dataNascimento"
                 className="block text-black font-semibold"
               >
                 Data de Nascimento*
               </label>
               <Field
-                name="data_nascimento"
+                name="dataNascimento"
                 type="date"
-                className="w-[160px] border border-black-500 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-[160px] border border-black-500 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
                 // onChange={(e) => handleDataChange(e, setFieldValue)}
               />
               <ErrorMessage
-                name="data_nascimento"
+                name="dataNascimento"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm whitespace-pre-line leading-tight"
               />
             </div>
 
@@ -226,18 +310,18 @@ const CadastroProdutoresForm = () => {
               <Field
                 name="telefone"
                 type="text"
-                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
                 onChange={(e) => handleTelefoneChange(e, setFieldValue)}
                 maxLength="15"
               />
               <ErrorMessage
                 name="telefone"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm"
               />
             </div>
 
-            <div>
+            <div className="max-w-[160px]">
               <label
                 htmlFor="fidelizacao"
                 className="block text-black font-semibold"
@@ -246,18 +330,18 @@ const CadastroProdutoresForm = () => {
               </label>
               <Field
                 name="fidelizacao"
-                type="text"
+                type="date"
                 maxLength="4"
-                className="w-[98px] border border-black-100 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-[160px] border border-black-100 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
               />
               <ErrorMessage
                 name="fidelizacao"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm whitespace-pre-line leading-tight"
               />
             </div>
 
-            <div>
+            <div className="max-w-[230px]">
               <label
                 htmlFor="endereco"
                 className="block text-black font-semibold"
@@ -267,30 +351,27 @@ const CadastroProdutoresForm = () => {
               <Field
                 name="endereco"
                 type="text"
-                className="w-[230px] border border-black-100 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-[230px] border border-black-100 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
               />
               <ErrorMessage
                 name="endereco"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="estado"
-                className="block text-black font-semibold"
-              >
+              <label htmlFor="uf" className="block text-black font-semibold">
                 Estado*
               </label>
               <Field
                 as="select"
-                name="estado"
+                name="uf"
                 className="border border-black-500 rounded-md px-4 py-2.5 bg-white text-black"
                 onChange={async (e) => {
                   const sigla = e.target.value;
-                  setFieldValue("estado", sigla);
-                  setFieldValue("cidade", ""); // Reseta a cidade ao mudar o estado
+                  setFieldValue("uf", sigla);
+                  setFieldValue("nomeMunicipio", ""); // Reseta a cidade ao mudar o estado
 
                   // Carrega cidades do estado selecionado
                   if (sigla) {
@@ -309,22 +390,22 @@ const CadastroProdutoresForm = () => {
                 ))}
               </Field>
               <ErrorMessage
-                name="estado"
+                name="uf"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm"
               />
             </div>
 
             <div>
               <label
-                htmlFor="cidade"
+                htmlFor="nomeMunicipio"
                 className="block text-black font-semibold"
               >
                 Cidade*
               </label>
               <Field
                 as="select"
-                name="cidade"
+                name="nomeMunicipio"
                 className="border border-black-500 rounded-md pl-4 py-2.5 bg-white text-black"
                 // disabled={!values.estado}
               >
@@ -336,22 +417,22 @@ const CadastroProdutoresForm = () => {
                 ))}
               </Field>
               <ErrorMessage
-                name="cidade"
+                name="nomeMunicipio"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm"
               />
             </div>
 
             <div>
               <label
-                htmlFor="regional"
+                htmlFor="nomeRegional"
                 className="block text-black font-semibold"
               >
                 Regional*
               </label>
               <Field
                 as="select"
-                name="regional"
+                name="nomeRegional"
                 className="border border-black-500 rounded-md pl-4 py-2.5 bg-white text-black"
                 // disabled={!values.estado}
               >
@@ -363,24 +444,25 @@ const CadastroProdutoresForm = () => {
                 ))}
               </Field>
               <ErrorMessage
-                name="regional"
+                name="nomeRegional"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-[#d00000] text-sm"
               />
             </div>
 
             <div className="w-full flex justify-center gap-4 mt-6">
               <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="bg-[#595959] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
+              >
+                Cancelar
+              </button>
+              <button
                 type="submit"
                 className="bg-[#000000] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
               >
                 Cadastrar Produtor
-              </button>
-              <button
-                type="button"
-                className="bg-[#c1121f] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
-              >
-                Cancelar
               </button>
             </div>
           </Form>

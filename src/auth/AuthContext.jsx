@@ -20,16 +20,27 @@ export const AuthProvider = ({ children }) => {
 
       toast.success("Usuário logado com sucesso!", {
         style: {
-          padding: "16px",
+          padding: "20px",
           color: "#FFFFFF",
-          background: "#6a994e",
+          background: "#1a7431",
         },
         iconTheme: {
-          primary: "#713200",
-          secondary: "#FFFAEE",
+          primary: "#FFFFFF",
+          secondary: "#3a5a40"
         },
       });
     } catch (error) {
+      toast.error("Erro ao logar com a conta do Google", {
+        style: {
+          padding: "20px",
+          color: "#FFFFFF",
+          background: "#bf0603"
+        },
+        iconTheme: {
+          primary: "#FFFFFF",
+          secondary: "#c81d25"
+        }
+      })
       console.error("Erro no login:", error);
     }
   };
@@ -48,18 +59,15 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      // setLoading(false); // Finaliza o carregamento
     });
 
-    return () => unsubscribe(); // Limpa o listener ao desmontar
+    return () => unsubscribe(); 
   }, []);
 
-  // Valores disponíveis para os componentes filhos
   const value = {
     user,
     loginWithGoogle,
     logout,
-    // loading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

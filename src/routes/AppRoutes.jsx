@@ -7,6 +7,8 @@ import HomePage from "../pages/Home/HomePage";
 import CadastrarProdutor from "../pages/Produtores/CadastrarProdutor";
 import AcompanharProducao from "../pages/Produtores/AcompanharProducao";
 import CadastrarAtividadeLimpeza from "../pages/CadastrarAtividadeLimpeza";
+// import ListAtividadesCadastradas from "../components/atividades_limpeza/ListAtividadesCadastradas";
+import ListAtividadesLimpezaCadastradas from "../pages/Usina/ListAtividadesLimpezaCadastradas";
 
 
 const AppRoutes = () => {
@@ -19,12 +21,13 @@ const AppRoutes = () => {
             <Route index element={<HomePage />} />
 
             <Route path="/produtores">
-              <Route path="cadastrar" element={<CadastrarProdutor />} />
+              <Route path="cadastrarprodutor" element={<CadastrarProdutor />} />
               <Route path="acompanhamento" element={<AcompanharProducao />} />
             </Route>
 
             <Route path="/usina">
               <Route path="limpeza" element={<CadastrarAtividadeLimpeza />} />
+              <Route path="atividadescadastradas" element={<ListAtividadesLimpezaCadastradas />} />
             </Route>
           </Route>
         </Routes>

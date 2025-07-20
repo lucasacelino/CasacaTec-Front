@@ -10,7 +10,6 @@ import dadosProdICC_RN from "../../services/mockProd2";
 const HomePage = () => {
   const anoAtual = new Date().getFullYear();
 
-  // const [ativar, setAtivar] = useState(false);
   const [selecionaUF, setSelecionarUF] = useState("PB");
   const [ufSelecionada, setUFselecionada] = useState([]);
 
@@ -33,10 +32,10 @@ const HomePage = () => {
         Os dados acima reúnem informações da safra de 2025 da Paraíba e Rio
         Grande do Norte
       </h2>
-
-      <h1 className="font-bold text-xl text-center mt-4">
+{/* 
+      {/* <h1 className="font-bold text-xl text-center mt-4">
         Clique para ver informações específicas da safra de cada estado
-      </h1>
+      </h1> */}
 
       <div className="flex justify-center gap-4 mt-2">
         <button
@@ -58,7 +57,7 @@ const HomePage = () => {
           Rio Grande do Norte
         </button>
 
-      </div>
+      </div> 
 
       <p className="text-lg font-medium">Regionais - {selecionaUF}</p>
       <CarroselButtonsRegionais UF={ufSelecionada} />

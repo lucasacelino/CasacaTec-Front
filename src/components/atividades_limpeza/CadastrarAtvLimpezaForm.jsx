@@ -1,38 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
 
 // import { differenceInYears } from "date-fns";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { SuccessDialog } from "./Modal/SuccessDialog";
 
 const CadastrarAtvLimpezaForm = () => {
+  const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+
   const initialValues = {
-    local_limpeza: "",
-    objeto_limpeza: "",
-    responsavel: "",
-    fiscal: "",
-    data_limpeza: "",
+    localLimpeza: "",
+    materialLimpeza: "",
+    responsavelLimpeza: "",
+    fiscalLimpeza: "",
+    dataLimpeza: "",
+    observacao: ""
   };
 
   const validationSchema = Yup.object({
-    local_limpeza: Yup.string()
-      .required("Nome é obrigatório")
+    localLimpeza: Yup.string()
+      .required("Local de limpeza é obrigatório")
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "Local de limpeza não pode ter espaços no início ou fim",
+        (value) => {
+          return value ? value.trim() === value : true;
+        }
+      )
       .min(2, "O nome deve ter pelo menos 2 letras"),
-    objeto_limpeza: Yup.string()
-      .required("Nome é obrigatório")
+    materialLimpeza: Yup.string()
+      .required("material de limpeza é obrigatório")
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "O material de limpeza não pode ter espaços no início ou fim",
+        (value) => {
+          return value ? value.trim() === value : true;
+        }
+      )
       .min(2, "O nome deve ter pelo menos 2 letras"),
-    responsavel: Yup.string()
-      .required("Nome é obrigatório")
+    responsavelLimpeza: Yup.string()
+      .required("Responsável é obrigatório")
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "Responsável não pode ter espaços no início ou fim",
+        (value) => {
+          return value ? value.trim() === value : true;
+        }
+      )
       .min(2, "O nome deve ter pelo menos 2 letras"),
-    fiscal: Yup.string()
-      .required("Nome é obrigatório")
+    fiscalLimpeza: Yup.string()
+      .required("Informar o fiscal é obrigatório")
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "Fiscal de limpeza não pode ter espaços no início ou fim",
+        (value) => {
+          return value ? value.trim() === value : true;
+        }
+      )
       .min(2, "O nome deve ter pelo menos 2 letras"),
-    data_limpeza: Yup.date()
+    dataLimpeza: Yup.date()
       .required("Data de limpeza é obrigatória")
       .max(new Date(), "Data não pode ser no futuro")
       .test("ano-valido", "Ano inválido", (value) => {
@@ -41,15 +75,34 @@ const CadastrarAtvLimpezaForm = () => {
         const anoAtual = new Date().getFullYear();
         return anoString.length === 4 && ano > 1920 && ano <= anoAtual;
       }),
+    observacao: Yup.string()
+      // .required("Observação é obrigatório")
+      .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "Observação não pode ter espaços no início ou fim",
+        (value) => {
+          return value ? value.trim() === value : true;
+        }
+      )
+      .min(2, "O nome deve ter pelo menos 2 letras"),
   });
 
+  // const handleBackToHome = 
+
   const handleSubmit = async (values, { resetForm }) => {
+
+    const [anoNasc, mesNasc, diaNasc] = values.dataLimpeza.split("-");
+    const dataNascFormatada = `${diaNasc}/${mesNasc}/${anoNasc}`;
+
     const dadosEnvio = {
-      local_limpeza: values.local_limpeza,
-      objeto_limpeza: values.objeto_limpeza,
-      responsavel: values.responsavel,
-      fiscal: values.fiscal,
-      data_limpeza: values.data_limpeza,
+      localLimpeza: values.localLimpeza,
+      materialLimpeza: values.materialLimpeza,
+      responsavelLimpeza: values.responsavelLimpeza,
+      fiscalLimpeza: values.fiscalLimpeza,
+      dataLimpeza: dataNascFormatada,
+      observacao: values.observacao
+
     };
 
     try {
@@ -58,9 +111,12 @@ const CadastrarAtvLimpezaForm = () => {
         dadosEnvio
       );
 
+      // const response = await axios.post("http://localhost:8080/limpezas/limpeza", dadosEnvio);
+
       resetForm();
       console.log("Atividade de limpeza cadastrada com sucesso");
-      toast.success("Atividade de limpeza cadastrada co sucesso");
+      // toast.success("Atividade de limpeza cadastrada co sucesso");
+      setOpenDialog(true);
       console.log(response.data);
     } catch (error) {
       toast.error("Não foi possúvel cadastrar a atividade");
@@ -69,104 +125,123 @@ const CadastrarAtvLimpezaForm = () => {
   };
 
   return (
-    <div className="w-full bg-[#FFFFFF] border-t-4 border-[#F9BF80] pt-2">
+    <div className="w-full bg-[#FFFFFF] border-t-2 border-[#FF6B00] pt-2">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
         <Form className="flex flex-wrap gap-x-6 gap-y-4">
-          <div>
+          <div className="max-w-[230px]">
             <label
-              htmlFor="local_limpeza"
+              htmlFor="localLimpeza"
               className="block text-black font-semibold"
             >
               Local limpeza*
             </label>
             <Field
-              name="local_limpeza"
+              name="localLimpeza"
               type="text"
-              className="w-[230px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-[230px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
             />
             <ErrorMessage
-              name="local_limpeza"
+              name="localLimpeza"
               component="div"
-              className="text-red-500 text-sm"
+              className="text-[#d00000] text-sm"
             />
           </div>
 
-          <div>
+          <div className="max-w-[230px]">
             <label
-              htmlFor="objeto_limpeza"
+              htmlFor="materialLimpeza"
               className="block text-black font-semibold"
             >
-              Objeto de limpeza*
+              Material de limpeza*
             </label>
             <Field
-              name="objeto_limpeza"
+              name="materialLimpeza"
               type="text"
-              className="border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
               //   maxLength="14" // 000.000.000-00
             />
             <ErrorMessage
-              name="objeto_limpeza"
+              name="materialLimpeza"
               component="div"
-              className="text-red-500 text-sm"
+              className="text-[#d00000] text-sm"
             />
           </div>
 
-          <div>
+          <div className="max-w-[226px]">
             <label
-              htmlFor="responsavel"
+              htmlFor="responsavelLimpeza"
               className="block text-black font-semibold"
             >
               Responsável*
             </label>
             <Field
-              name="responsavel"
+              name="responsavelLimpeza"
               type="text"
-              className="border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-              maxLength="15"
+              className="border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
+              // maxLength="15"
             />
             <ErrorMessage
-              name="responsavel"
+              name="responsavelLimpeza"
               component="div"
-              className="text-red-500 text-sm"
+              className="text-[#d00000] text-sm"
             />
           </div>
 
-          <div>
-            <label htmlFor="fiscal" className="block text-black font-semibold">
+          <div className="max-w-[230px]">
+            <label htmlFor="fiscalLimpeza" className="block text-black font-semibold">
               Fiscal*
             </label>
             <Field
-              name="fiscal"
+              name="fiscalLimpeza"
               type="text"
-              className="w-[230px] border border-black-100 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-[230px] border border-black-100 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
             />
             <ErrorMessage
-              name="fiscal"
+              name="fiscalLimpeza"
               component="div"
-              className="text-red-500 text-sm"
+              className="text-[#d00000] text-sm"
             />
           </div>
 
-          <div>
+          <div className="max-w-[166px]">
             <label
-              htmlFor="data_limpeza"
+              htmlFor="dataLimpeza"
               className="block text-black font-semibold"
             >
               Data*
             </label>
             <Field
-              name="data_limpeza"
+              name="dataLimpeza"
               type="date"
-              className="border border-black-500 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-black-500 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
             />
             <ErrorMessage
-              name="data_limpeza"
+              name="dataLimpeza"
               component="div"
-              className="text-red-500 text-sm"
+              className="text-[#d00000] text-sm"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="observacao"
+              className="block text-black font-semibold"
+            >
+              Observação(opcional)
+            </label>
+            <Field
+              name="observacao"
+              as="textarea"
+              className="w-[330px] h-[150px] resize-none border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
+            />
+            <ErrorMessage
+              name="observacao"
+              component="div"
+              className="text-[#d00000] text-sm"
             />
           </div>
 
@@ -179,6 +254,7 @@ const CadastrarAtvLimpezaForm = () => {
             </button>
             <button
               type="button"
+              onClick={() => navigate("/")}
               className="bg-[#c1121f] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
             >
               Cancelar
@@ -186,6 +262,7 @@ const CadastrarAtvLimpezaForm = () => {
           </div>
         </Form>
       </Formik>
+      <SuccessDialog isOpen={openDialog} onClose={() => setOpenDialog(false)} />
     </div>
   );
 };
