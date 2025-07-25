@@ -9,7 +9,7 @@ import AcompanharProducao from "../pages/Produtores/AcompanharProducao";
 import CadastrarAtividadeLimpeza from "../pages/CadastrarAtividadeLimpeza";
 // import ListAtividadesCadastradas from "../components/atividades_limpeza/ListAtividadesCadastradas";
 import ListAtividadesLimpezaCadastradas from "../pages/Usina/ListAtividadesLimpezaCadastradas";
-
+import ListDistribuicao from "../pages/DistribuicaoSementes/ListDistribuicao";
 
 const AppRoutes = () => {
   return (
@@ -27,7 +27,14 @@ const AppRoutes = () => {
 
             <Route path="/usina">
               <Route path="limpeza" element={<CadastrarAtividadeLimpeza />} />
-              <Route path="atividadescadastradas" element={<ListAtividadesLimpezaCadastradas />} />
+              <Route
+                path="atividadescadastradas"
+                element={<ListAtividadesLimpezaCadastradas />}
+              />
+            </Route>
+
+            <Route path="/distribuicao">
+              <Route path="cadastrardistribuicao" element={<ListDistribuicao/>} />
             </Route>
           </Route>
         </Routes>

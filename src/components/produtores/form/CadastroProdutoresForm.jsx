@@ -77,33 +77,6 @@ const CadastroProdutoresForm = () => {
     telefone: Yup.string()
       .required("Telefone é obrigatório")
       .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
-    // fidelizacao: Yup.string()
-    //   .matches(/^\d{4}$/, "O ano deve ter 4 dígitos")
-    //   .test("ano-valido", "Ano não pode ser no futuro", function (value) {
-    //     const ano = parseInt(value, 10);
-    //     return ano <= new Date().getFullYear();
-    //   })
-    //   .test(
-    //     "ano incompatível",
-    //     "O ano de fidelização é incompatível com a data de nascimento",
-    //     function (ano) {
-    //       const anoFidelizacao = parseInt(ano, 10);
-    //       const dataNascimento = this.parent.dataNascimento;
-    //       return anoFidelizacao > new Date(dataNascimento).getFullYear();
-    //     }
-    //   )
-    //   .test(
-    //     "Ano incomapátivel",
-    //     "Maioridade não atingida no ano de fidelização",
-    //     function (value) {
-    //       const anoFidelizacao = parseInt(value, 10);
-    //       const dataNascimento = this.parent.dataNascimento;
-    //       const anoNascimento = new Date(dataNascimento).getFullYear();
-    //       const diferencaAnos = anoFidelizacao - anoNascimento;
-    //       return diferencaAnos >= 18;
-    //     }
-    //   )
-    //   .required("Ano de fidelização é obrigatório"),
     fidelizacao: Yup.date()
       .required("Data de fidelização é obrigatório")
       .max(new Date(), "Data não pode ser no futuro")
@@ -122,8 +95,6 @@ const CadastroProdutoresForm = () => {
             this.parent.dataNascimento
           ).getFullYear();
           return anoFidelizacao >= dataNascimento;
-          // const anoNascimento = new Date(dataNascimento).getFullYear();
-          // return anoFidelizacao > anoNascimento;
         }
       )
       .test(
@@ -170,12 +141,6 @@ const CadastroProdutoresForm = () => {
     const [ano, mes, dia] = values.fidelizacao.split("-");
     const dte = `${dia}/${mes}/${ano}`;
 
-    // const municipio = {
-    //   nomeMunicipio: values.nomeMunicipio,
-    //   uf: values.uf,
-    //   nomeRegional: values.nomeRegional,
-    // };
-
     const dadosEnvio = {
       nomeCompleto: values.nomeCompleto,
       cpf: values.cpf,
@@ -193,8 +158,6 @@ const CadastroProdutoresForm = () => {
     console.log("Dados que serão enviados:", dadosEnvio);
 
     try {
-      // const response = await axios.post("http://localhost:8080/produtores/produtor", dadosEnvio);
-      // const response = await axios.post("http://localhost:8080/produtores/produtor", dadosEnvio);
       const response = await axios.post(
         "http://localhost:3000/produtores",
         dadosEnvio
@@ -215,259 +178,276 @@ const CadastroProdutoresForm = () => {
   };
 
   return (
-    <div className="w-full bg-[#FFFFFF] border-t-2 border-[#FF6B00] pt-2">
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ setFieldValue }) => (
-          <Form className="flex flex-wrap gap-x-6 gap-y-4">
-            <div className="max-w-[230px]">
-              <label
-                htmlFor="nomeCompleto"
-                className="block text-black font-semibold"
-              >
-                Nome completo*
-              </label>
-              <Field
-                name="nomeCompleto"
-                type="text"
-                className="w-[230px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
-              />
-              <ErrorMessage
-                name="nomeCompleto"
-                component="div"
-                className="text-[#d00000] text-sm whitespace-pre-line leading-tight"
-              />
-            </div>
+    <div className="w-full bg-white">
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ setFieldValue, isSubmitting }) => (
+            <Form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Nome Completo */}
+              <div>
+                <label
+                  htmlFor="nomeCompleto"
+                  className="block text-sm font-medium text-black"
+                >
+                  Nome completo*
+                </label>
+                <Field
+                  name="nomeCompleto"
+                  type="text"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                />
+                <ErrorMessage
+                  name="nomeCompleto"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="cpf" className="block text-black font-semibold">
-                CPF*
-              </label>
-              <Field
-                name="cpf"
-                type="text"
-                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
-                onChange={(e) => handleCPFChange(e, setFieldValue)}
-                maxLength="14" // 000.000.000-00
-              />
-              <ErrorMessage
-                name="cpf"
-                component="div"
-                className="text-[#d00000] text-sm"
-              />
-            </div>
+              {/* CPF */}
+              <div>
+                <label
+                  htmlFor="cpf"
+                  className="block text-sm font-medium text-black"
+                >
+                  CPF*
+                </label>
+                <Field
+                  name="cpf"
+                  type="text"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                  onChange={(e) => handleCPFChange(e, setFieldValue)}
+                  maxLength="14"
+                />
+                <ErrorMessage
+                  name="cpf"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="sexo" className="block text-black font-semibold">
-                Sexo*
-              </label>
-              <Field
-                as="select"
-                name="sexo"
-                className="border border-black-300 rounded-md pl-4 py-2.5 bg-white text-black"
-              >
-                <option value="">Selecione a cidade</option>
-                <option value="masculino">Masculino</option>
-                <option value="feminino">Feminino</option>
-              </Field>
-              <ErrorMessage
-                name="sexo"
-                component="div"
-                className="text-[#d00000] text-sm"
-              />
-            </div>
+              {/* Sexo */}
+              <div>
+                <label
+                  htmlFor="sexo"
+                  className="block text-sm font-medium text-black"
+                >
+                  Sexo*
+                </label>
+                <Field
+                  as="select"
+                  name="sexo"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                >
+                  <option value="">Selecione</option>
+                  <option value="masculino">Masculino</option>
+                  <option value="feminino">Feminino</option>
+                </Field>
+                <ErrorMessage
+                  name="sexo"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-            <div className="max-w-[160px]">
-              <label
-                htmlFor="dataNascimento"
-                className="block text-black font-semibold"
-              >
-                Data de Nascimento*
-              </label>
-              <Field
-                name="dataNascimento"
-                type="date"
-                className="w-[160px] border border-black-500 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
-                // onChange={(e) => handleDataChange(e, setFieldValue)}
-              />
-              <ErrorMessage
-                name="dataNascimento"
-                component="div"
-                className="text-[#d00000] text-sm whitespace-pre-line leading-tight"
-              />
-            </div>
+              {/* Data de Nascimento */}
+              <div>
+                <label
+                  htmlFor="dataNascimento"
+                  className="block text-sm font-medium text-black"
+                >
+                  Data de Nascimento*
+                </label>
+                <Field
+                  name="dataNascimento"
+                  type="date"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                />
+                <ErrorMessage
+                  name="dataNascimento"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-            <div>
-              <label
-                htmlFor="telefone"
-                className="block text-black font-semibold"
-              >
-                Telefone*
-              </label>
-              <Field
-                name="telefone"
-                type="text"
-                className="w-[160px] border border-black-500 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
-                onChange={(e) => handleTelefoneChange(e, setFieldValue)}
-                maxLength="15"
-              />
-              <ErrorMessage
-                name="telefone"
-                component="div"
-                className="text-[#d00000] text-sm"
-              />
-            </div>
+              {/* Telefone */}
+              <div>
+                <label
+                  htmlFor="telefone"
+                  className="block text-sm font-medium text-black"
+                >
+                  Telefone*
+                </label>
+                <Field
+                  name="telefone"
+                  type="text"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                  onChange={(e) => handleTelefoneChange(e, setFieldValue)}
+                  maxLength="15"
+                />
+                <ErrorMessage
+                  name="telefone"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-            <div className="max-w-[160px]">
-              <label
-                htmlFor="fidelizacao"
-                className="block text-black font-semibold"
-              >
-                Fidelização*
-              </label>
-              <Field
-                name="fidelizacao"
-                type="date"
-                maxLength="4"
-                className="w-[160px] border border-black-100 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
-              />
-              <ErrorMessage
-                name="fidelizacao"
-                component="div"
-                className="text-[#d00000] text-sm whitespace-pre-line leading-tight"
-              />
-            </div>
+              {/* Fidelização */}
+              <div>
+                <label
+                  htmlFor="fidelizacao"
+                  className="block text-sm font-medium text-black"
+                >
+                  Fidelização*
+                </label>
+                <Field
+                  name="fidelizacao"
+                  type="date"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                />
+                <ErrorMessage
+                  name="fidelizacao"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-            <div className="max-w-[230px]">
-              <label
-                htmlFor="endereco"
-                className="block text-black font-semibold"
-              >
-                Endereço*
-              </label>
-              <Field
-                name="endereco"
-                type="text"
-                className="w-[230px] border border-black-100 rounded-md pl-1 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
-              />
-              <ErrorMessage
-                name="endereco"
-                component="div"
-                className="text-[#d00000] text-sm"
-              />
-            </div>
+              {/* Endereço */}
+              <div className="md:col-span-2">
+                <label
+                  htmlFor="endereco"
+                  className="block text-sm font-medium text-black"
+                >
+                  Endereço*
+                </label>
+                <Field
+                  name="endereco"
+                  type="text"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                />
+                <ErrorMessage
+                  name="endereco"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="uf" className="block text-black font-semibold">
-                Estado*
-              </label>
-              <Field
-                as="select"
-                name="uf"
-                className="border border-black-500 rounded-md px-4 py-2.5 bg-white text-black"
-                onChange={async (e) => {
-                  const sigla = e.target.value;
-                  setFieldValue("uf", sigla);
-                  setFieldValue("nomeMunicipio", ""); // Reseta a cidade ao mudar o estado
+              {/* Estado */}
+              <div>
+                <label
+                  htmlFor="uf"
+                  className="block text-sm font-medium text-black"
+                >
+                  Estado*
+                </label>
+                <Field
+                  as="select"
+                  name="uf"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                  onChange={async (e) => {
+                    const sigla = e.target.value;
+                    setFieldValue("uf", sigla);
+                    setFieldValue("nomeMunicipio", "");
+                    if (sigla) {
+                      const cidades = await fetchCitiesByState(sigla);
+                      setCidades(cidades);
+                    } else {
+                      setCidades([]);
+                    }
+                  }}
+                >
+                  <option value="">Selecione o estado</option>
+                  {estados.map((estado) => (
+                    <option key={estado.sigla} value={estado.sigla}>
+                      {estado.nome} ({estado.sigla})
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage
+                  name="uf"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-                  // Carrega cidades do estado selecionado
-                  if (sigla) {
-                    const cidades = await fetchCitiesByState(sigla);
-                    setCidades(cidades);
-                  } else {
-                    setCidades([]);
-                  }
-                }}
-              >
-                <option value="">Selecione o estado</option>
-                {estados.map((estado) => (
-                  <option key={estado.sigla} value={estado.sigla}>
-                    {estado.nome} ({estado.sigla})
-                  </option>
-                ))}
-              </Field>
-              <ErrorMessage
-                name="uf"
-                component="div"
-                className="text-[#d00000] text-sm"
-              />
-            </div>
+              {/* Cidade */}
+              <div>
+                <label
+                  htmlFor="nomeMunicipio"
+                  className="block text-sm font-medium text-black"
+                >
+                  Cidade*
+                </label>
+                <Field
+                  as="select"
+                  name="nomeMunicipio"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                >
+                  <option value="">Selecione a cidade</option>
+                  {cidades.map((cidade) => (
+                    <option key={cidade.nome} value={cidade.nome}>
+                      {cidade.nome}
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage
+                  name="nomeMunicipio"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-            <div>
-              <label
-                htmlFor="nomeMunicipio"
-                className="block text-black font-semibold"
-              >
-                Cidade*
-              </label>
-              <Field
-                as="select"
-                name="nomeMunicipio"
-                className="border border-black-500 rounded-md pl-4 py-2.5 bg-white text-black"
-                // disabled={!values.estado}
-              >
-                <option value="">Selecione a cidade</option>
-                {cidades.map((cidade) => (
-                  <option key={cidade.nome} value={cidade.nome}>
-                    {cidade.nome}
-                  </option>
-                ))}
-              </Field>
-              <ErrorMessage
-                name="nomeMunicipio"
-                component="div"
-                className="text-[#d00000] text-sm"
-              />
-            </div>
+              {/* Regional */}
+              <div>
+                <label
+                  htmlFor="nomeRegional"
+                  className="block text-sm font-medium text-black"
+                >
+                  Regional*
+                </label>
+                <Field
+                  as="select"
+                  name="nomeRegional"
+                  className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                >
+                  <option value="">Selecione a regional</option>
+                  {cidades.map((cidade) => (
+                    <option key={cidade.nome} value={cidade.nome}>
+                      {cidade.nome}
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage
+                  name="nomeRegional"
+                  component="div"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-            <div>
-              <label
-                htmlFor="nomeRegional"
-                className="block text-black font-semibold"
-              >
-                Regional*
-              </label>
-              <Field
-                as="select"
-                name="nomeRegional"
-                className="border border-black-500 rounded-md pl-4 py-2.5 bg-white text-black"
-                // disabled={!values.estado}
-              >
-                <option value="">Selecione a regional</option>
-                {cidades.map((cidade) => (
-                  <option key={cidade.nome} value={cidade.nome}>
-                    {cidade.nome}
-                  </option>
-                ))}
-              </Field>
-              <ErrorMessage
-                name="nomeRegional"
-                component="div"
-                className="text-[#d00000] text-sm"
-              />
-            </div>
+              <div className="col-span-full flex justify-end gap-4 pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => navigate("/")}
+                  className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-white bg-gray-500"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#000000] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6B00] disabled:opacity-50"
+                >
+                  {isSubmitting ? "Cadastrando..." : "Cadastrar Produtor"}
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
 
-            <div className="w-full flex justify-center gap-4 mt-6">
-              <button
-                type="button"
-                onClick={() => navigate("/")}
-                className="bg-[#595959] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                className="bg-[#000000] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
-              >
-                Cadastrar Produtor
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
       <SuccessDialog isOpen={openDialog} onClose={() => setOpenDialog(false)} />
     </div>
   );

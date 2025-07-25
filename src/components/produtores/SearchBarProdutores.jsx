@@ -48,8 +48,6 @@ const SearchBarProdutores = () => {
     try {
       const params = {};
       if (nome) params.nomeCompleto = nome;
-      // if (estadoSelecionado) params.uf = estadoSelecionado;
-      // if (cidadeSelecionada) params.nomeMunicipio = cidadeSelecionada;
       if(estadoSelecionado && cidadeSelecionada) {
         params.uf = estadoSelecionado;
         params.nomeMunicipio = cidadeSelecionada;
@@ -180,17 +178,3 @@ const SearchBarProdutores = () => {
 };
 
 export default SearchBarProdutores;
-
-{
-  /* <div className="w-full flex justify-center mt-2">
-          <button
-            onClick={handleSearchProdutor}
-            className="block bg-[#000000] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
-          >
-            Pesquisar
-          </button>
-        </div> */
-}
-{
-  /* {renderResultDados()} */
-}

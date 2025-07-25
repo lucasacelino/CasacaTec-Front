@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Mousewheel, FreeMode, Navigation } from "swiper/modules";
@@ -9,24 +9,40 @@ import "swiper/css/mousewheel";
 import DadosSafraCidadesTable from "./DadosSafraCidadesTable";
 
 const CarroselButtonsRegionais = ({ UF }) => {
+  const [cidadesFiltradasRegionais, setCidadesFiltradas] = useState([]);
   const [regionalSelecionada, setRegionalSelecionada] = useState(null);
-  const [cidadesFiltradas, setCidadesFiltradas] = useState([]);
 
-  const totalCidades = UF.flatMap((regional) => regional.cidades).length;
+  const filterCidades = (regional) => {
+    setRegionalSelecionada(regional);
+    const cidades = UF.filter((item) => item.nomeRegional === regional);
 
-  const handleRegionalClick = (regional) => {
-    setRegionalSelecionada(regional.nome_regional);
-    setCidadesFiltradas(regional.cidades);
+    const contagemMunicipios = cidades.reduce((acc, cidade) => {
+      const nomeMunicipio = cidade.nomeMunicipio;
+      acc[nomeMunicipio] = (acc[nomeMunicipio] || 0) + 1;
+      return acc;
+    }, {});
+
+    const municipiosFiltrados = Object.entries(contagemMunicipios).map(([municipio, qtd]) => ({
+      nomeMunicipio: municipio,
+      inscritos: qtd,
+    }));
+
+    setCidadesFiltradas(municipiosFiltrados);
   };
 
-  const dadosParaTabela = regionalSelecionada
-    ? cidadesFiltradas
-    : UF.flatMap((regional) => regional.cidades);
+  const filterRegionaisEstado = [
+    ...new Set(UF.map((item) => item.nomeRegional)),
+  ];
+
+   useEffect(() => {
+    if (filterRegionaisEstado.length > 0) {
+      filterCidades(filterRegionaisEstado[0]);
+    }
+  }, [UF]); 
 
   return (
     <div className="w-full max-w-6xl mt-1">
       <div className="relative mt-1 pb-2 border-b border-gray-200">
-        {/* Container principal do Swiper */}
         <div className="relative group">
           <Swiper
             modules={[Navigation, Mousewheel, FreeMode]}
@@ -49,36 +65,18 @@ const CarroselButtonsRegionais = ({ UF }) => {
             }}
             className="!overflow-hidden"
           >
-            {/* Seus botões permanecem aqui */}
-            <SwiperSlide className="!w-auto">
-              <button
-                className={`px-6 py-2 rounded-sm font-medium text-sm whitespace-nowrap ${
-                  !regionalSelecionada
-                    ? "bg-[#FFA94B] text-black"
-                    : "bg-[#000000] text-[#FFA94B]"
-                }`}
-                onClick={() => {
-                  setRegionalSelecionada(null);
-                  setCidadesFiltradas([]);
-                }}
-              >
-                Total cidades - {totalCidades}
-              </button>
-            </SwiperSlide>
-
-            {UF.map((regional) => (
-              <SwiperSlide key={regional.id} className="!w-auto">
+            {filterRegionaisEstado.map((nomeRegional) => (
+              <SwiperSlide key={nomeRegional} className="!w-auto">
                 <button
-                  className={`px-6 py-2 rounded-sm font-medium text-sm whitespace-nowrap transition-all duration-200 ${
-                    regionalSelecionada === regional.nome_regional
-                      ? "bg-[#FFA94B] text-[#000000]"
-                      : "bg-[#000000] text-[#FFA94B]"
-                  }`}
-                  onClick={() => {
-                    handleRegionalClick(regional);
-                  }}
+                  className={`px-6 py-2 rounded-sm font-medium text-sm whitespace-nowrap ${
+                    nomeRegional === regionalSelecionada
+                      ? "bg-[#f76300] text-[#FFFFFF]"
+                      : "bg-[#000000] text-[#FFFFFF]"
+                  }
+                  `}
+                  onClick={() => filterCidades(nomeRegional)}
                 >
-                  {regional.nome_regional} - {regional.cidades.length}
+                  {nomeRegional}
                 </button>
               </SwiperSlide>
             ))}
@@ -95,7 +93,7 @@ const CarroselButtonsRegionais = ({ UF }) => {
         </div>
       </div>
 
-      <DadosSafraCidadesTable data={dadosParaTabela} />
+      <DadosSafraCidadesTable data={cidadesFiltradasRegionais} />
     </div>
   );
 };

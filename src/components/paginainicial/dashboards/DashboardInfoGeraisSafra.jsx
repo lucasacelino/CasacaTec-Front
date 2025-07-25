@@ -8,48 +8,55 @@ import algodao from "../../../assets/SVGs/algodao.svg";
 import axios from "axios";
 
 const DashboardInfoGeraisSafra = () => {
-  // const [qtdProdutores, setQtdProdutores] = useState(0);
-  // const [qtdMunicipios, setQtdMunicipios] = useState(0);
+  const [qtdProdutores, setQtdProdutores] = useState(0);
+  const [qtdMunicipios, setQtdMunicipios] = useState(0);
 
-  // useEffect(() => {
-  //   const fetchProdutores = async () => {
-  //     const response = await axios.get("http://localhost:3000/produtores");
-  //     const municipios = [...new Set(response.data.map(item => item.municipio.nomeMunicipio))];
-  //     const totalProdutores = response.data.length;
+  useEffect(() => {
+    const fetchProdutores = async () => {
+      const response = await axios.get("http://localhost:3000/produtores");
+      const totalProdutores = response.data.length;
+      setQtdProdutores(totalProdutores);
 
-  //     setQtdProdutores(totalProdutores);
-  //     setQtdMunicipios(municipios.length)
-  //   };
-  //   fetchProdutores();
-  // }, []);
+      const municipios = [
+        ...new Set(response.data.map((item) => item.nomeMunicipio)),
+      ];
+      setQtdMunicipios(municipios.length);
+    };
+    fetchProdutores();
+  }, []);
 
   const dadosCards = [
     {
       titulo: "Total produtores",
-      valor: 12,
-      icon: produtor
+      valor: qtdProdutores,
+      icon: produtor,
     },
     {
       titulo: "Total Municípios",
-      valor: 12,
-      icon: fazenda
+      valor: qtdMunicipios,
+      icon: fazenda,
     },
     {
       titulo: "Sacos Distribuídas",
       valor: 12,
-      icon: semente
+      icon: semente,
     },
     {
-      titulo: "Sacos Distribuídas",
+      titulo: "Hectares plantados",
       valor: 12,
-      icon: algodao
+      icon: algodao,
     },
   ];
 
   return (
     <div className="flex flex-row gap-4">
       {dadosCards.map((dados, index) => (
-        <CardItem key={index} titulo={dados.titulo} valor={dados.valor} icon={dados.icon}/>
+        <CardItem
+          key={index}
+          titulo={dados.titulo}
+          valor={dados.valor}
+          icon={dados.icon}
+        />
       ))}
     </div>
   );

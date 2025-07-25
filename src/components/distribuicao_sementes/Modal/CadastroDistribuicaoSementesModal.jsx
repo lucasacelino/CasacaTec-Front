@@ -1,0 +1,381 @@
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Description,
+} from "@headlessui/react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { maskTelefone } from "../../produtores/utils/mascarasInputs";
+import { useEffect, useState } from "react";
+import { fetchCitiesByState, fetchStates } from "../../../services/ibgeService";
+
+const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
+  const [estado, setEstado] = useState([]);
+  const [cidades, setCidades] = useState([]);
+  //   const [estadoSelelcionado, setEstadoSelecionado] = useState("");
+  //   const [cidadeSelelcionada, setCidadeSelecionada] = useState("");
+
+  useEffect(() => {
+    const carregarDadosEstados = async () => {
+      const response = await fetchStates();
+      setEstado(response);
+    };
+    carregarDadosEstados();
+  }, []);
+
+  //   const handleSelectEstado = (e) => {
+  //     setEstadoSelecionado(e.target.value);
+  //     setCidades([]);
+  //   };
+
+  //   const handleSelectCidade = (e) => {
+  //     setCidadeSelecionada(e.target.value);
+  //   };
+
+  const initialValues = {
+    nomeCondutor: "",
+    telefoneCondutor: "",
+    nomeTecnico: "",
+    estado: "",
+    cidade: "",
+    horarioPrevisto: "",
+    quantidadeSacos: "",
+    dataEntrega: "",
+    observacao: "",
+  };
+
+  const validationSchema = Yup.object({
+    nomeCondutor: Yup.string()
+      .required("Nome do condutor é obrigatório")
+      .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "Nome não pode ter espaços no início ou fim",
+        (value) => (value ? value.trim() === value : true)
+      )
+      .min(2, "O nome deve ter pelo menos 2 letras"),
+
+    telefoneCondutor: Yup.string()
+      .required("Telefone é obrigatório")
+      .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
+    estado: Yup.string().required("Estado é obrigatório"),
+    cidade: Yup.string().required("Cidade é obrigatória"),
+    nomeTecnico: Yup.string()
+      .required("Nome do técnico é obrigatório")
+      .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "Nome não pode ter espaços no início ou fim",
+        (value) => (value ? value.trim() === value : true)
+      )
+      .min(2, "O nome deve ter pelo menos 2 letras"),
+    horarioPrevisto: Yup.string().required("Horário previsto é obrigatório"),
+    quantidadeSacos: Yup.number()
+      .required("Quantidade de sacos é obrigatória")
+      .positive("A quantidade deve ser positiva")
+      .integer("A quantidade deve ser um número inteiro"),
+    dataEntrega: Yup.date().required("Data de nascimento é obrigatória"),
+    observacao: Yup.string()
+      .matches(/^[A-Za-zÀ-ú\s]+$/, "A observação deve conter apenas letras")
+      .test(
+        "no-trailing-spaces",
+        "Observação não pode ter espaços no início ou fim",
+        (value) => (value ? value.trim() === value : true)
+      )
+      .min(2, "A observação deve ter pelo menos 2 letras"),
+  });
+
+  const handleTelefoneChange = (e, setFieldValue) => {
+    const formattedValue = maskTelefone(e.target.value);
+    setFieldValue("telefoneCondutor", formattedValue);
+  };
+
+  const handleEstadoChange = async (siglaEstado, setFieldValue) => {
+    if (siglaEstado) {
+      const response = await fetchCitiesByState(siglaEstado);
+      setCidades(response);
+      // Limpa a cidade selecionada quando muda o estado
+      setFieldValue("cidade", "");
+    } else {
+      setCidades([]);
+    }
+    setFieldValue("estado", siglaEstado);
+  };
+
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      const dadosEnvio = {
+        nomeCondutor: values.nomeCondutor,
+        telefoneCondutor: values.telefoneCondutor,
+        estado: values.estado,
+        cidade: values.cidade,
+        nomeTecnico: values.nomeTecnico,
+        horarioPrevisto: values.horarioPrevisto,
+        quantidadeSacos: values.quantidadeSacos,
+        dataEntrega: values.dataEntrega,
+        observacao: values.observacao,
+      };
+
+      const response = await axios.post(
+        "http://localhost:3000/distr",
+        dadosEnvio
+      );
+
+      onSave(response.data);
+      resetForm();
+      toast.success("Condutor cadastrado com sucesso");
+      onClose();
+    } catch (error) {
+      toast.error("Não foi possível cadastrar o condutor");
+      console.error(error);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
+      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+        <DialogPanel className="max-w-2xl w-full space-y-4 border bg-white p-6 rounded-lg">
+          <DialogTitle className="font-bold text-xl text-[#000000] border-b-2 border-[#FF6B00]">
+            Cadastrar Novo Condutor
+          </DialogTitle>
+
+          <Description className="text-sm text-[#000000]">
+            Preencha os campos abaixo para cadastrar um novo condutor
+          </Description>
+
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting, setFieldValue }) => (
+              <Form className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label
+                    htmlFor="nomeCondutor"
+                    className="block text-sm font-medium text-black"
+                  >
+                    Nome do Condutor*
+                  </label>
+                  <Field
+                    name="nomeCondutor"
+                    type="text"
+                    className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                  />
+                  <ErrorMessage
+                    name="nomeCondutor"
+                    component="div"
+                    className="text-red-500 text-xs mt-1"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="telefoneCondutor"
+                    className="block text-sm font-medium text-black"
+                  >
+                    Telefone do Condutor*
+                  </label>
+                  <Field
+                    name="telefoneCondutor"
+                    type="text"
+                    className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                    onChange={(e) => handleTelefoneChange(e, setFieldValue)}
+                    maxLength="15"
+                  />
+                  <ErrorMessage
+                    name="telefoneCondutor"
+                    component="div"
+                    className="text-red-500 text-xs mt-1"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="estado"
+                    className="block text-sm font-medium text-black"
+                  >
+                    Estado*
+                  </label>
+                  <Field
+                    name="estado"
+                    as="select"
+                    // value={estadoSelelcionado}
+                    // onChange={handleSelectEstado}
+                    onChange={async (e) => {
+                      await handleEstadoChange(e.target.value, setFieldValue);
+                    }}
+                    className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                  >
+                    <option value="">Selecione o estado</option>
+                    {estado.map((estado) => (
+                      <option key={estado.sigla} value={estado.sigla}>
+                        {estado.nome} ({estado.sigla})
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage
+                    name="estado"
+                    component="div"
+                    className="text-red-500 text-xs mt-1"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="cidade"
+                    className="block text-sm font-medium text-black"
+                  >
+                    Cidade*
+                  </label>
+                  <Field
+                    name="cidade"
+                    // value={cidadeSelelcionada}
+                    // onChange={handleSelectCidade}
+                    as="select"
+                    className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                  >
+                    <option value="">Selecione uma cidade</option>
+                    {cidades.map((estado) => (
+                      <option key={estado.nome} value={estado.nome}>
+                        {estado.nome}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage
+                    name="cidade"
+                    component="div"
+                    className="text-red-500 text-xs mt-1"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="nomeTecnico"
+                    className="block text-sm font-medium text-black"
+                  >
+                    Nome do Técnico*
+                  </label>
+                  <Field
+                    name="nomeTecnico"
+                    type="text"
+                    className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                  />
+                  <ErrorMessage
+                    name="nomeTecnico"
+                    component="div"
+                    className="text-red-500 text-xs mt-1"
+                  />
+                </div>
+
+                <div class="col-span-2 grid grid-cols-3 gap-4">
+                  <div>
+                    <label
+                      htmlFor="horarioPrevisto"
+                      className="block text-sm font-medium text-black"
+                    >
+                      Horário Previsto*
+                    </label>
+                    <Field
+                      name="horarioPrevisto"
+                      type="time"
+                      className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                    />
+                    <ErrorMessage
+                      name="horarioPrevisto"
+                      component="div"
+                      className="text-red-500 text-xs mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="quantidadeSacos"
+                      className="block text-sm font-medium text-black"
+                    >
+                      Quantidade de Sacos*
+                    </label>
+                    <Field
+                      name="quantidadeSacos"
+                      type="number"
+                      min="1"
+                      className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                    />
+                    <ErrorMessage
+                      name="quantidadeSacos"
+                      component="div"
+                      className="text-red-500 text-xs mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="dataEntrega"
+                      className="block text-sm font-medium text-black"
+                    >
+                      Data de entrega*
+                    </label>
+                    <Field
+                      name="dataEntrega"
+                      type="date"
+                      min="1"
+                      className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                    />
+                    <ErrorMessage
+                      name="dataEntrega"
+                      component="div"
+                      className="text-red-500 text-xs mt-1"
+                    />
+                  </div>
+                </div>
+
+                <div className="col-span-2">
+                  <label
+                    htmlFor="observacao"
+                    className="block text-sm font-medium text-black"
+                  >
+                    Observação (opcional)
+                  </label>
+                  <Field
+                    name="observacao"
+                    as="textarea"
+                    rows={3}
+                    className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                  />
+                  <ErrorMessage
+                    name="observacao"
+                    component="div"
+                    className="text-red-500 text-xs mt-1"
+                  />
+                </div>
+
+                <div className="col-span-2 flex justify-end gap-4 pt-2">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-[#FFFFFF] bg-[#595959]"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#000000] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6B00] disabled:opacity-50"
+                  >
+                    {isSubmitting ? "Cadastrando..." : "Cadastrar"}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </DialogPanel>
+      </div>
+    </Dialog>
+  );
+};
+
+export default CadastroCondutorModal;

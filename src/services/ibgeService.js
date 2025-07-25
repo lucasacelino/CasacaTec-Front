@@ -2,7 +2,6 @@ export const fetchStates = async () => {
   const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
   const states = await response.json();
   
-  // Filtra apenas PB (Paraíba) e RN (Rio Grande do Norte)
   const filteredStates = states.filter(state => 
     state.sigla === 'PB' || state.sigla === 'RN'
   );

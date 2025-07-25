@@ -9,7 +9,7 @@ const CadastrarProdutor = () => {
         <span className="font-medium text-[#FF6B00]">&gt;</span>
         <span className="text-sm font-medium py-1 underline">Cadastrar produtor</span>
       </div>
-      <h1 className="text-2xl font-bold">Cadastrar produtor</h1>
+      <h1 className="text-2xl font-bold border-b-2 border-[#FF6B00]">Cadastrar produtor</h1>
       <CadastroProdutoresForm />
     </>
     
