@@ -240,25 +240,6 @@ const CadastrarAtvLimpezaForm = () => {
             />
           </div>
 
-          {/* <div className="max-w-[166px]">
-            <label
-              htmlFor="dataLimpeza"
-              className="block text-black font-semibold"
-            >
-              Data*
-            </label>
-            <Field
-              name="dataLimpeza"
-              type="date"
-              className="border border-black-500 rounded-md px-3 py-2 text-black focus:outline-none focus:ring-1 focus:ring-black-500"
-            />
-            <ErrorMessage
-              name="dataLimpeza"
-              component="div"
-              className="text-[#d00000] text-sm"
-            />
-          </div> */}
-
           <div className="max-w-[166px]">
             <label
               htmlFor="dataLimpeza"

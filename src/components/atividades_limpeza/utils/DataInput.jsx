@@ -25,6 +25,7 @@ const DateInput = ({ field, form, ...props }) => {
       {...props}
       value={formatForInput(field.value)}
       onChange={handleChange}
+      className="w-full border border-black rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
     />
   );
 };

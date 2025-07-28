@@ -2,7 +2,8 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import ModalEditAtividadeLimpeza from "./Modal/ModalEditInfoProdutor";
+import ModalEditAtividadeLimpeza from "./Modal/ModalEditInfoAtividade";
+// import ModalEditAtividadeLimpeza from "./Modal/ModalEditInfoProdutor";
 
 const ListAtividadesCadastradas = () => {
   const [dadosAtvLimpeza, setDadosAtvLimpeza] = useState([]);

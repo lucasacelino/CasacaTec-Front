@@ -52,6 +52,19 @@ const menuItems = [
       },
     ],
   },
+  // {
+  //   id: "tecnicos",
+  //   title: "Técnicos",
+  //   isExpandable: true,
+  //   defaultOpen: true,
+  //   children: [
+  //     {
+  //       id: "cadastrar-distribuicao",
+  //       title: "Cadastrar distribuição de sementes",
+  //       path: "/distribuicao/cadastrardistribuicao",
+  //     },
+  //   ],
+  // },
 ];
 
 const SideBar = () => {
@@ -87,10 +100,10 @@ const SideBar = () => {
     <li key={item.id}>
       <button
         onClick={() => handleItemClick(item)}
-        className={`flex items-center w-full p-2 pl-3 rounded-lg text-sm transition-colors duration-200 hover:bg-[#f76300] bg-opacity-80 ${
+        className={`flex items-center text-left whitespace-normal p-2 pl-3 rounded-lg text-sm transition-colors duration-200 hover:bg-[#f76300] bg-opacity-80 ${
           activeItem === item.id
             ? "text-[#000000] font-medium bg-[#fcaf58]"
-            : "text-white hover:text-[#FFFFFF]"
+            : "text-white font-medium hover:text-[#000000]"
         }`}
       >
         {item.title}

@@ -15,8 +15,6 @@ import { fetchCitiesByState, fetchStates } from "../../../services/ibgeService";
 const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
   const [estado, setEstado] = useState([]);
   const [cidades, setCidades] = useState([]);
-  //   const [estadoSelelcionado, setEstadoSelecionado] = useState("");
-  //   const [cidadeSelelcionada, setCidadeSelecionada] = useState("");
 
   useEffect(() => {
     const carregarDadosEstados = async () => {
@@ -25,15 +23,6 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
     };
     carregarDadosEstados();
   }, []);
-
-  //   const handleSelectEstado = (e) => {
-  //     setEstadoSelecionado(e.target.value);
-  //     setCidades([]);
-  //   };
-
-  //   const handleSelectCidade = (e) => {
-  //     setCidadeSelecionada(e.target.value);
-  //   };
 
   const initialValues = {
     nomeCondutor: "",
@@ -77,7 +66,31 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
       .required("Quantidade de sacos é obrigatória")
       .positive("A quantidade deve ser positiva")
       .integer("A quantidade deve ser um número inteiro"),
-    dataEntrega: Yup.date().required("Data de nascimento é obrigatória"),
+    dataEntrega: Yup.date()
+      .required("Data de agendamento é obrigatória")
+      .test("ano-valido", "Ano inválido", (value) => {
+        // const ano = value.getFullYear();
+        const anoString = value.getFullYear().toString();
+        return anoString.length === 4;
+      })
+      .test(
+        "data-valida",
+        "A data deve ser hoje ou no futuro, dentro do ano corrente",
+        (value) => {
+          if (!value) return false;
+
+          const data = value;
+          data.setHours(0, 0, 0, 0);
+
+          const anoAtual = new Date().getFullYear();
+
+          const dataAtual = new Date();
+          dataAtual.setHours(0, 0, 0, 0);
+          
+          return data >= dataAtual && data.getFullYear() === anoAtual;
+        }
+      ),
+
     observacao: Yup.string()
       .matches(/^[A-Za-zÀ-ú\s]+$/, "A observação deve conter apenas letras")
       .test(
@@ -97,7 +110,6 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
     if (siglaEstado) {
       const response = await fetchCitiesByState(siglaEstado);
       setCidades(response);
-      // Limpa a cidade selecionada quando muda o estado
       setFieldValue("cidade", "");
     } else {
       setCidades([]);
@@ -140,11 +152,11 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
         <DialogPanel className="max-w-2xl w-full space-y-4 border bg-white p-6 rounded-lg">
           <DialogTitle className="font-bold text-xl text-[#000000] border-b-2 border-[#FF6B00]">
-            Cadastrar Novo Condutor
+            Agendar distribuição de sementes
           </DialogTitle>
 
           <Description className="text-sm text-[#000000]">
-            Preencha os campos abaixo para cadastrar um novo condutor
+            Preencha os campos abaixo para agendar uma distribuição
           </Description>
 
           <Formik
@@ -204,8 +216,6 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
                   <Field
                     name="estado"
                     as="select"
-                    // value={estadoSelelcionado}
-                    // onChange={handleSelectEstado}
                     onChange={async (e) => {
                       await handleEstadoChange(e.target.value, setFieldValue);
                     }}
@@ -234,8 +244,6 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
                   </label>
                   <Field
                     name="cidade"
-                    // value={cidadeSelelcionada}
-                    // onChange={handleSelectCidade}
                     as="select"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                   >
@@ -272,7 +280,7 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
                   />
                 </div>
 
-                <div class="col-span-2 grid grid-cols-3 gap-4">
+                <div className="col-span-2 grid grid-cols-3 gap-4">
                   <div>
                     <label
                       htmlFor="horarioPrevisto"
