@@ -86,7 +86,7 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
 
           const dataAtual = new Date();
           dataAtual.setHours(0, 0, 0, 0);
-          
+
           return data >= dataAtual && data.getFullYear() === anoAtual;
         }
       ),
@@ -118,6 +118,9 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
   };
 
   const handleSubmit = async (values, { resetForm }) => {
+    // const [anoNasc, mesNasc, diaNasc] = values.dataEntrega.split("-");
+    // const dataNascFormatada = `${diaNasc}/${mesNasc}/${anoNasc}`;
+
     try {
       const dadosEnvio = {
         nomeCondutor: values.nomeCondutor,
@@ -128,6 +131,8 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
         horarioPrevisto: values.horarioPrevisto,
         quantidadeSacos: values.quantidadeSacos,
         dataEntrega: values.dataEntrega,
+        // dataEntrega: dataNascFormatada,
+        statusEntrega: "Pendente",
         observacao: values.observacao,
       };
 
@@ -361,7 +366,7 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
                   />
                 </div>
 
-                <div className="col-span-2 flex justify-end gap-4 pt-2">
+                <div className="col-span-2 flex justify-end gap-2 pt-2">
                   <button
                     type="button"
                     onClick={onClose}

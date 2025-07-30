@@ -149,7 +149,6 @@ const CadastroProdutoresForm = () => {
       telefone: values.telefone,
       fidelizacao: dte,
       endereco: values.endereco,
-      // municipio: municipio,
       nomeMunicipio: values.nomeMunicipio,
       uf: values.uf,
       nomeRegional: values.nomeRegional,

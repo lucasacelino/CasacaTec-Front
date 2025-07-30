@@ -8,7 +8,12 @@ import toast from "react-hot-toast";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
-const ModalEditInfoProdutor = ({ produtorId, isOpen, onClose, onProdutorAtualizado }) => {
+const ModalEditInfoProdutor = ({
+  produtorId,
+  isOpen,
+  onClose,
+  onProdutorAtualizado
+}) => {
   const [estados, setEstados] = useState([]);
   const [cidades, setCidades] = useState([]);
 
@@ -137,62 +142,6 @@ const ModalEditInfoProdutor = ({ produtorId, isOpen, onClose, onProdutorAtualiza
       )
       .min(2, "O nome deve ter pelo menos 2 letras"),
     sexo: Yup.string().required("Sexo é obrigatório"),
-    // dataNascimento: Yup.string()
-    //   .required("Data de limpeza é obrigatória")
-    //   .test("formato-data", "Formato inválido (use DD/MM/AAAA)", (value) => {
-    //     if (!value) return false;
-    //     return /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/.test(value);
-    //   })
-    //   .test(
-    //     "Produtor menor de idade",
-    //     "Produtor não pode ser menor de idade",
-    //     (idade) => {
-    //       const dataNascimento = idade;
-    //       const dataAtual = new Date();
-    //       const diferencaAnos = differenceInYears(dataAtual, dataNascimento);
-    //       return diferencaAnos >= 18;
-    //     }
-    //   )
-    //   .test("data-valida", "Data inválida", (value) => {
-    //     if (!value) return false;
-    //     const [day, month, year] = value.split("/");
-    //     const date = new Date(`${year}-${month}-${day}`);
-    //     return !isNaN(date.getTime());
-    //   })
-    //   .test("data-futura", "Data não pode ser no futuro", (value) => {
-    //     if (!value) return false;
-    //     const [day, month, year] = value.split("/");
-    //     const inputDate = new Date(`${year}-${month}-${day}`);
-    //     return inputDate <= new Date();
-    //   })
-    //   .test(
-    //     "ano-valido",
-    //     "Ano inválido (deve ser entre 1900 e o ano atual)",
-    //     (value) => {
-    //       if (!value) return false;
-    //       const [_, __, year] = value.split("/");
-    //       const yearNum = parseInt(year, 10);
-    //       const currentYear = new Date().getFullYear();
-    //       return yearNum >= 1900 && yearNum <= currentYear;
-    //     }
-    //   )
-    //   .test("dia-valido", "Dia inválido para este mês", (value) => {
-    //     if (!value) return false;
-    //     const [day, month, year] = value.split("/");
-    //     const date = new Date(year, month - 1, day);
-    //     return (
-    //       date.getDate() == day &&
-    //       date.getMonth() == month - 1 &&
-    //       date.getFullYear() == year
-    //     );
-    //   })
-    //   .test("mes-valido", "Mês inválido (1-12)", (value) => {
-    //     if (!value) return false;
-    //     const [_, month, __] = value.split("/");
-    //     const monthNum = parseInt(month, 10);
-    //     return monthNum >= 1 && monthNum <= 12;
-    //   }),
-
     dataNascimento: Yup.string()
       .required("Data de nascimento é obrigatória")
       .test("formato-data", "Formato inválido (use DD/MM/AAAA)", (value) => {
@@ -212,73 +161,6 @@ const ModalEditInfoProdutor = ({ produtorId, isOpen, onClose, onProdutorAtualiza
     telefone: Yup.string()
       .required("Telefone é obrigatório")
       .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
-    // fidelizacao: Yup.string()
-    //   .required("Data de limpeza é obrigatória")
-    //   .test("formato-data", "Formato inválido (use DD/MM/AAAA)", (value) => {
-    //     if (!value) return false;
-    //     return /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/.test(value);
-    //   })
-    //   .test(
-    //     "x",
-    //     "O ano de fidelização é incompatível com a data de nascimento",
-    //     function (value) {
-    //       const anoFidelizacao = new Date(value).getFullYear();
-    //       const dataNascimento = new Date(
-    //         this.parent.dataNascimento
-    //       ).getFullYear();
-    //       return anoFidelizacao >= dataNascimento;
-    //     }
-    //   )
-    //   .test(
-    //     "ano incompatível",
-    //     "Maioridade não atingida no ano de fidelização",
-    //     function (value) {
-    //       const anoFidelizacao = new Date(value).getFullYear();
-    //       const dataNascimento = this.parent.dataNascimento;
-    //       const anoNascimento = new Date(dataNascimento).getFullYear();
-    //       const diferencaAnos = anoFidelizacao - anoNascimento;
-    //       return diferencaAnos >= 18;
-    //     }
-    //   )
-    //   .test("data-valida", "Data inválida", (value) => {
-    //     if (!value) return false;
-    //     const [day, month, year] = value.split("/");
-    //     const date = new Date(`${year}-${month}-${day}`);
-    //     return !isNaN(date.getTime());
-    //   })
-    //   .test("data-futura", "Data não pode ser no futuro", (value) => {
-    //     if (!value) return false;
-    //     const [day, month, year] = value.split("/");
-    //     const inputDate = new Date(`${year}-${month}-${day}`);
-    //     return inputDate <= new Date();
-    //   })
-    //   .test(
-    //     "ano-valido",
-    //     "Ano inválido (deve ser entre 1900 e o ano atual)",
-    //     (value) => {
-    //       if (!value) return false;
-    //       const [_, __, year] = value.split("/");
-    //       const yearNum = parseInt(year, 10);
-    //       const currentYear = new Date().getFullYear();
-    //       return yearNum >= 1900 && yearNum <= currentYear;
-    //     }
-    //   )
-    //   .test("dia-valido", "Dia inválido para este mês", (value) => {
-    //     if (!value) return false;
-    //     const [day, month, year] = value.split("/");
-    //     const date = new Date(year, month - 1, day);
-    //     return (
-    //       date.getDate() == day &&
-    //       date.getMonth() == month - 1 &&
-    //       date.getFullYear() == year
-    //     );
-    //   })
-    //   .test("mes-valido", "Mês inválido (1-12)", (value) => {
-    //     if (!value) return false;
-    //     const [_, month, __] = value.split("/");
-    //     const monthNum = parseInt(month, 10);
-    //     return monthNum >= 1 && monthNum <= 12;
-    //   }),
     fidelizacao: Yup.string()
       .required("Data de fidelização é obrigatória")
       .test("formato-data", "Formato inválido (use DD/MM/AAAA)", (value) => {
@@ -327,15 +209,6 @@ const ModalEditInfoProdutor = ({ produtorId, isOpen, onClose, onProdutorAtualiza
           return ageAtFidelizacao >= 18;
         }
       ),
-    //   .test(
-    //     "ano-compativel",
-    //     "Ano de fidelização não pode ser anterior ao de nascimento",
-    //     function (value) {
-    //       const fidelizacaoDate = parseDateString(value);
-    //       const nascimentoDate = parseDateString(this.parent.dataNascimento);
-    //       return fidelizacaoDate >= nascimentoDate;
-    //     }
-    //   )
     endereco: Yup.string()
       .required("Endereço é obrigatório")
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O endereço deve conter apenas letras")
@@ -365,10 +238,31 @@ const ModalEditInfoProdutor = ({ produtorId, isOpen, onClose, onProdutorAtualiza
       );
 
       console.log(response.data);
-      toast.success("Os dados do produtor foram atualizados com sucesso!");
+      toast.success("Os dados do produtor foram atualizados com sucesso!", {
+        style: {
+          padding: "16px",
+          color: "#FFFFFF",
+          background: "#1a7431",
+        },
+        iconTheme: {
+          primary: "#FFFFFF",
+          secondary: "#3a5a40",
+        },
+      });
       onClose();
       onProdutorAtualizado(response.data);
     } catch (err) {
+      toast.error("Erro ao tentar atualizar os dados do produtor", {
+        style: {
+          padding: "20px",
+          color: "#FFFFFF",
+          background: "#bf0603",
+        },
+        iconTheme: {
+          primary: "#FFFFFF",
+          secondary: "#f4acb7",
+        },
+      });
       console.error(err);
     }
   };
@@ -475,8 +369,7 @@ const ModalEditInfoProdutor = ({ produtorId, isOpen, onClose, onProdutorAtualiza
                   >
                     Fidelização*
                   </label>
-                  <Field name="fidelizacao"
-                  component={DateInput} />
+                  <Field name="fidelizacao" component={DateInput} />
                   <ErrorMessage
                     name="fidelizacao"
                     component="div"

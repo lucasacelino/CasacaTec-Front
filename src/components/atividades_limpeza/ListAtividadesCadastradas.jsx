@@ -3,7 +3,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ModalEditAtividadeLimpeza from "./Modal/ModalEditInfoAtividade";
-// import ModalEditAtividadeLimpeza from "./Modal/ModalEditInfoProdutor";
 
 const ListAtividadesCadastradas = () => {
   const [dadosAtvLimpeza, setDadosAtvLimpeza] = useState([]);
@@ -37,7 +36,7 @@ const ListAtividadesCadastradas = () => {
   if (dadosAtvLimpeza.length == 0) {
     return (
       <div className="mt-4 w-full flex flex-col items-center">
-        <p className="font-medium">Nenhuma atividade Cadastrada</p>
+        <p className="font-medium">Nenhuma atividade cadastrada</p>
       </div>
     );
   }
@@ -93,7 +92,7 @@ const ListAtividadesCadastradas = () => {
                   <td className="py-2 px-4 font-medium border-b border-gray-400 max-w-xs break-words">
                     {dados.observacao}
                   </td>
-                  <td className="py-4 px-6 text-center border-b border-gray-400">
+                  <td className="py-2 px-4 text-center border-b border-gray-400">
                     <div className="flex items-center justify-center space-x-2">
                       <button
                         onClick={() => {
@@ -161,12 +160,12 @@ const ListAtividadesCadastradas = () => {
             >
               <DialogTitle
                 as="h3"
-                className="text-base/7 font-medium text-[#000000]"
+                className="text-lg font-medium text-[#000000]"
               >
                 Desejar excluir a atividade de limpeza?
               </DialogTitle>
               <div className="mt-4">
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <button className="px-4 py-2 rounded-sm bg-[#495057] text-[#FFFFFF]">
                     Não
                   </button>

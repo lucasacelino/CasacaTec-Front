@@ -237,7 +237,7 @@ const CadastroAtividadeModal = ({ isOpen, onClose, onSave }) => {
                   />
                 </div>
 
-                <div className="col-span-2 flex justify-end gap-4 pt-2">
+                <div className="col-span-2 flex justify-end gap-2 pt-2">
                   <button
                     type="button"
                     onClick={onClose}

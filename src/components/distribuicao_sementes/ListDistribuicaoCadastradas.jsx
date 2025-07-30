@@ -4,16 +4,9 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const ListDistribuicaoCadastradas = () => {
-  const [filtroIsOpen, setFiltroIsOpen] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [idDistribuicao, setIdDistribuicao] = useState(null);
   const [distribuicoesAgendadas, setDistribuicoesAgendadas] = useState([]);
-  const [filters, setFilters] = useState({
-    nomeCondutor: "",
-    estado: "",
-    cidade: "",
-    status: "all",
-  });
 
   useEffect(() => {
     const carregarAtividades = async () => {
@@ -27,7 +20,6 @@ const ListDistribuicaoCadastradas = () => {
   const handleExcluirAtividade = async () => {
     try {
       await axios.delete(`http://localhost:3000/distr/${idDistribuicao}`);
-      // Atualiza a lista após exclusão
       setDistribuicoesAgendadas(
         distribuicoesAgendadas.filter(
           (atividade) => atividade.id !== idDistribuicao
@@ -39,7 +31,7 @@ const ListDistribuicaoCadastradas = () => {
         style: {
           background: "#2c6e49",
           color: "#fff",
-          padding: "26px"
+          padding: "26px",
         },
         icon: (
           <svg
@@ -63,171 +55,50 @@ const ListDistribuicaoCadastradas = () => {
     }
   };
 
-  const applyFilters = () => {
-    setFiltroIsOpen(false);
+  const atualizarStatusNoBackend = async (id, novoStatus) => {
+    try {
+      const response = await axios.patch(`http://localhost:3000/distr/${id}`, { 
+        statusEntrega: novoStatus,
+      });
+
+      setDistribuicoesAgendadas(
+        distribuicoesAgendadas.map((pedido) =>
+          pedido.id === id ? { ...pedido, statusEntrega: novoStatus } : pedido
+        )
+      );
+
+      console.log("Atualizado com sucesso:", response.data);
+    } catch (error) {
+      console.error("Erro ao atualizar:", error);
+      alert("Falha ao atualizar o status!");
+    }
   };
 
-  const resetFilters = () => {
-    setFilters({
-      nomeCondutor: "",
-      estado: "",
-      cidade: "",
-      status: "all",
-    });
-  };
+  const handleCheckboxChange = async (event, id) => {
+    const novoStatus = event.target.checked ? "Entregue" : "Pendente";
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleCheckboxChange = (id) => {
+    // Atualização otimista (opcional)
     setDistribuicoesAgendadas(
-      distribuicoesAgendadas.map((item) =>
-        item.id === id ? { ...item, entregue: !item.entregue } : item
+      distribuicoesAgendadas.map((distribuicoes) =>
+        distribuicoes.id === id ? { ...distribuicoes, statusEntrega: novoStatus } : distribuicoes
       )
     );
-  };
 
-  const filteredData = distribuicoesAgendadas.filter((item) => {
-    return (
-      item.nomeCondutor
-        .toLowerCase()
-        .includes(filters.nomeCondutor.toLowerCase()) &&
-      item.estado.toLowerCase().includes(filters.estado.toLowerCase()) &&
-      item.cidade.toLowerCase().includes(filters.cidade.toLowerCase()) &&
-      (filters.status === "all" ||
-        (filters.status === "entregue" && item.entregue) ||
-        (filters.status === "pendente" && !item.entregue))
-    );
-  });
+    await atualizarStatusNoBackend(id, novoStatus);
+  };
 
   if (distribuicoesAgendadas.length == 0) {
     return (
       <div className="mt-4 w-full flex flex-col items-center">
-        {/* <LoadingAtividadesSpinner /> */}
-        <p className="font-medium">Nenhuma atividade Cadastrada</p>
+        <p className="font-medium text-xl">
+          Nenhuma distribuição de sementes agendada!
+        </p>
       </div>
     );
   }
 
   return (
     <>
-      <div className="mt-2 flex justify-center">
-        <button
-          onClick={() => setFiltroIsOpen(!filtroIsOpen)}
-          className="flex items-center mb-1 bg-[#000000] px-2 py-2 text-[#FFFFFF] rounded-sm font-medium"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="1em"
-            height="1em"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="none"
-              stroke="currentColor"
-              strokeDasharray="56"
-              strokeDashoffset="56"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M5 4h14l-5 6.5v9.5l-4 -4v-5.5Z"
-            >
-              <animate
-                fill="freeze"
-                attributeName="stroke-dashoffset"
-                dur="0.6s"
-                values="56;0"
-              />
-            </path>
-          </svg>
-          Filtrar dados
-        </button>
-      </div>
-
-      {filtroIsOpen && (
-        <div className="transition duration-200 bg-gray-50 p-4 border border-gray-500 rounded-md mt-2 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-black mb-1">
-                Nome do Condutor
-              </label>
-              <input
-                type="text"
-                name="nomeCondutor"
-                value={filters.nomeCondutor}
-                onChange={handleFilterChange}
-                className="w-full border border-black rounded-md px-3 py-2 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
-                placeholder="Filtrar por nome"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-black mb-1">
-                Estado
-              </label>
-              <input
-                type="text"
-                name="estado"
-                value={filters.estado}
-                onChange={handleFilterChange}
-                className="w-full border border-black rounded-md px-3 py-2 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
-                placeholder="Filtrar por estado"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-black mb-1">
-                Cidade
-              </label>
-              <input
-                type="text"
-                name="cidade"
-                value={filters.cidade}
-                onChange={handleFilterChange}
-                className="w-full border border-black rounded-md px-3 py-2 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
-                placeholder="Filtrar por cidade"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-black mb-1">
-                Status
-              </label>
-              <select
-                name="status"
-                value={filters.status}
-                onChange={handleFilterChange}
-                className="w-full border border-black rounded-md px-3 py-2.5 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
-              >
-                <option value="all">Todos</option>
-                <option value="entregue">Entregue</option>
-                <option value="pendente">Pendente</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 mt-4">
-            <button
-              onClick={resetFilters}
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-white bg-gray-500"
-            >
-              Limpar Filtros
-            </button>
-            <button
-              onClick={applyFilters}
-              className="px-4 py-2 bg-[#000000] text-white rounded-md text-sm font-medium"
-            >
-              Aplicar Filtros
-            </button>
-          </div>
-        </div>
-      )}
-
       <div className="mt-2 rounded-lg border border-gray-500 overflow-hidden">
         <div className="overflow-x-auto" style={{ maxHeight: "400px" }}>
           <table className="min-w-full bg-white">
@@ -269,7 +140,7 @@ const ListDistribuicaoCadastradas = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((dados) => (
+              {distribuicoesAgendadas.map((dados) => (
                 <tr key={dados.id}>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
                     {dados.nomeCondutor}
@@ -280,7 +151,7 @@ const ListDistribuicaoCadastradas = () => {
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
                     {dados.estado}
                   </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
+                  <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
                     {dados.cidade}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
@@ -302,23 +173,35 @@ const ListDistribuicaoCadastradas = () => {
                     <div className="flex flex-row gap-2">
                       <span
                         className={`rounded-sm px-2 py-2 ${
-                          dados.entregue
-                            ? "bg-[#74c69d] text-[#081c15]"
-                            : "bg-[#f79d65] text-[#780000]"
+                          dados.statusEntrega === "Pendente"
+                            ? "bg-[#f79d65] text-[#780000]"
+                            : "bg-[#74c69d] text-[#081c15]"
                         }`}
                       >
-                        {dados.entregue ? "Entregue" : "Pendente"}
+                        {dados.statusEntrega}
                       </span>
 
                       <div className="flex items-center gap-1">
-                        <input
-                          type="checkbox"
-                          checked={dados.entregue || false}
-                          onChange={() => handleCheckboxChange(dados.id)}
-                        />
-                        <span className="whitespace-nowrap">
-                          marcar como entregue
-                        </span>
+                        {dados.statusEntrega === "Pendente" ? (
+                          <>
+                            <input
+                              type="checkbox"
+                              checked={dados.statusEntrega === "Entregue"}
+                              // onChange={() => toggleStatusEntrega(dados.id)}
+                              onChange={(e) => {
+                                // setIdDistribuicao(dados.id);
+                                handleCheckboxChange(e, dados.id)
+                                // toggleStatusEntrega(dados.id);
+                                
+                              }}
+                            />
+                            <span className="text-sm font-bold whitespace-nowrap">
+                              marcar como entregue
+                            </span>
+                          </>
+                        ) : (
+                          <span></span>
+                        )}
                       </div>
                     </div>
                   </td>
@@ -393,7 +276,7 @@ const ListDistribuicaoCadastradas = () => {
                 Desejar excluir a atividade de limpeza?
               </DialogTitle>
               <div className="mt-4">
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <button className="px-4 py-2 rounded-sm bg-[#495057] text-[#FFFFFF]">
                     Não
                   </button>

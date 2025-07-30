@@ -10,6 +10,7 @@ import CadastrarAtividadeLimpeza from "../pages/CadastrarAtividadeLimpeza";
 // import ListAtividadesCadastradas from "../components/atividades_limpeza/ListAtividadesCadastradas";
 import ListAtividadesLimpezaCadastradas from "../pages/Usina/ListAtividadesLimpezaCadastradas";
 import ListDistribuicao from "../pages/DistribuicaoSementes/ListDistribuicao";
+import ListTecnicosCadastados from "../pages/Tecnicos/ListTecnicosCadastados";
 
 const AppRoutes = () => {
   return (
@@ -35,6 +36,10 @@ const AppRoutes = () => {
 
             <Route path="/distribuicao">
               <Route path="cadastrardistribuicao" element={<ListDistribuicao/>} />
+            </Route>
+
+            <Route path="/tecnicos">
+              <Route path="cadastrartecnicos" element={<ListTecnicosCadastados />} />
             </Route>
           </Route>
         </Routes>

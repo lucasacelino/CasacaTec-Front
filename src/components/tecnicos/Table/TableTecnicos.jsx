@@ -1,12 +1,23 @@
-import { useState } from "react";
-import ModalEditInfoProdutor from "../Modal/ModalEditInfoProdutor";
-import ModalExcluirProdutor from "../Modal/ModalExcluirProdutor";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import ModalEditInfoTecnico from "../Modal/ModalEdiitInfoTecnico";
 
-const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
+const TableTecnicos = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeletOpen, setIsDeletOpen] = useState(false);
-  const [produtorId, setProdutorId] = useState(null);
-  // const dadosProdutores = dados || [];
+  const [tecnicoId, setTecnicoId] = useState(null);
+  // const [isDeletOpen, setIsDeletOpen] = useState(false);
+  const [dadosTecnicos, setDadosTecnicos] = useState([]);
+
+  useEffect(() => {
+    const carregarDadosProdutores = async () => {
+      const response = await axios.get("http://localhost:3000/tecnicos");
+      setDadosTecnicos(response.data);
+    };
+    carregarDadosProdutores();
+  }, []);
+
+  // const [produtorId, setProdutorId] = useState(null);
+  // const [dadosProdutores, setDadosoProdutores] = useState(dados);
 
   // const handleProdutorAtualizado = (produtorAtualizado) => {
   //   setDadosoProdutores((prev) =>
@@ -23,35 +34,14 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
           <table className="min-w-full bg-white">
             <thead>
               <tr className="bg-[#f1f0ea] border-b-2 border-[#FF6B00] sticky top-0">
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left whitespace-nowrap">
+                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
                   Nome completo
                 </th>
                 <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
-                  CPF
-                </th>
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
-                  Sexo
-                </th>
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left whitespace-nowrap">
-                  Data de nascimento
+                  Email
                 </th>
                 <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
                   Telefone
-                </th>
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
-                  Fidelização
-                </th>
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
-                  Endereço
-                </th>
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
-                  Estado
-                </th>
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
-                  Cidade
-                </th>
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
-                  Regional
                 </th>
                 <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
                   Ações
@@ -59,45 +49,23 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
               </tr>
             </thead>
             <tbody>
-              {dados.map((dado) => (
+              {dadosTecnicos.map((dado) => (
                 <tr key={dado.id}>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
+                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
                     {dado.nomeCompleto}
                   </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
-                    {dado.cpf}
+                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
+                    {dado.email}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
-                    {dado.sexo}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
-                    {dado.dataNascimento}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
                     {dado.telefone}
                   </td>
-                  <td className="py-2 px-4 font-medium border-b border-gray-400 max-w-xs break-words">
-                    {dado.fidelizacao}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
-                    {dado.endereco}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
-                    {dado.uf}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
-                    {dado.nomeMunicipio}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
-                    {dado.nomeRegional}
-                  </td>
-
-                  <td className="py-4 px-6 text-center border-b border-gray-400">
-                    <div className="flex items-center justify-center space-x-2">
+                  <td className="py-2 px-6 text-center border-b border-gray-400">
+                    <div className="flex items-center justify-start space-x-2">
                       <button
                         onClick={() => {
                           setIsEditOpen(true);
-                          setProdutorId(dado.id);
+                          setTecnicoId(dado.id);
                         }}
                         className="flex items-center p-2 text-[#000000]border-black font-medium rounded-sm transition-colors duration-200 hover:text-blue-800 border border-gray-400"
                         title="Editar"
@@ -117,8 +85,8 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
                       </button>
                       <button
                         onClick={() => {
-                          setIsDeletOpen(true);
-                          setProdutorId(dado.id);
+                          // setIsDeletOpen(true);
+                          // setProdutorId(dado.id);
                         }}
                         className="p-2 flex items-center font-medium text-[#000000] rounded-sm transition-colors duration-200 hover:text-red-800 border border-gray-400"
                         title="Excluir"
@@ -146,21 +114,9 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
         </div>
       </div>
 
-      <ModalEditInfoProdutor
-        // key={produtorId}
-        produtorId={produtorId}
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-        onProdutorAtualizado={onProdutorAtualizado}
-      />
-
-      <ModalExcluirProdutor
-        produtorId={produtorId}
-        isOpen={isDeletOpen}
-        onClose={() => setIsDeletOpen(false)}
-      />
+      <ModalEditInfoTecnico tecnicoId={tecnicoId} isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
     </>
   );
 };
 
-export default TableProdutores;
+export default TableTecnicos;

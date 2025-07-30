@@ -22,10 +22,12 @@ const CarroselButtonsRegionais = ({ UF }) => {
       return acc;
     }, {});
 
-    const municipiosFiltrados = Object.entries(contagemMunicipios).map(([municipio, qtd]) => ({
-      nomeMunicipio: municipio,
-      inscritos: qtd,
-    }));
+    const municipiosFiltrados = Object.entries(contagemMunicipios).map(
+      ([municipio, qtd]) => ({
+        nomeMunicipio: municipio,
+        inscritos: qtd,
+      })
+    );
 
     setCidadesFiltradas(municipiosFiltrados);
   };
@@ -34,11 +36,11 @@ const CarroselButtonsRegionais = ({ UF }) => {
     ...new Set(UF.map((item) => item.nomeRegional)),
   ];
 
-   useEffect(() => {
+  useEffect(() => {
     if (filterRegionaisEstado.length > 0) {
       filterCidades(filterRegionaisEstado[0]);
     }
-  }, [UF]); 
+  }, [UF]);
 
   return (
     <div className="w-full max-w-6xl mt-1">
@@ -84,11 +86,33 @@ const CarroselButtonsRegionais = ({ UF }) => {
         </div>
 
         <div className="relative h-8 mt-2 group">
-          <div className="swiper-button-prev absolute left-0 top-0 z-10 w-8 h-8 bg-black bg-opacity-70 text-[#FFA94B] rounded-full flex items-center justify-center transition-opacity duration-200 cursor-pointer">
-            &lt;
+          <div className="swiper-button-prev absolute left-0 top-0 z-10 w-8 h-8 bg-black bg-opacity-70 text-[#FFFFFF] rounded-full flex items-center justify-center transition-opacity duration-200 cursor-pointer">
+            {/* &lt; */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1em"
+              height="1em"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="m7.825 13l4.9 4.9q.3.3.288.7t-.313.7q-.3.275-.7.288t-.7-.288l-6.6-6.6q-.15-.15-.213-.325T4.426 12t.063-.375t.212-.325l6.6-6.6q.275-.275.688-.275t.712.275q.3.3.3.713t-.3.712L7.825 11H19q.425 0 .713.288T20 12t-.288.713T19 13z"
+              />
+            </svg>
           </div>
-          <div className="swiper-button-next absolute right-0 top-0 z-10 w-8 h-8 bg-black bg-opacity-70 text-[#FFA94B] rounded-full flex items-center justify-center transition-opacity duration-200 cursor-pointer">
-            &gt;
+          <div className="swiper-button-next absolute right-0 top-0 z-10 w-8 h-8 bg-black bg-opacity-70 text-[#FFFFFF] rounded-full flex items-center justify-center transition-opacity duration-200 cursor-pointer">
+            {/* &gt; */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1em"
+              height="1em"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M16.175 13H5q-.425 0-.712-.288T4 12t.288-.712T5 11h11.175l-4.9-4.9q-.3-.3-.288-.7t.313-.7q.3-.275.7-.288t.7.288l6.6 6.6q.15.15.213.325t.062.375t-.062.375t-.213.325l-6.6 6.6q-.275.275-.687.275T11.3 19.3q-.3-.3-.3-.712t.3-.713z"
+              />
+            </svg>
           </div>
         </div>
       </div>

@@ -41,7 +41,7 @@ const HomePage = () => {
         <button
           className={`px-4 py-3 rounded-sm font-semibold text-lg ${
             estadoSelecionado === "PB"
-              ? "bg-[#f76300] text-[#FFFFFF]"
+              ? "bg-[#f76300] text-[#FFFFFF] border-b-3 border-[#000000]"
               : "bg-[#000000] text-[#FFFFFF]"
           }
           `}
@@ -53,7 +53,7 @@ const HomePage = () => {
         <button
           className={`px-4 py-3 rounded-sm font-semibold text-lg ${
             estadoSelecionado === "RN"
-              ? "bg-[#F76300] text-[#FFFFFF]"
+              ? "bg-[#F76300] text-[#FFFFFF] border-b-3 border-[#000000]"
               : "bg-[#000000] text-[#FFFFFF]"
           }
           `}

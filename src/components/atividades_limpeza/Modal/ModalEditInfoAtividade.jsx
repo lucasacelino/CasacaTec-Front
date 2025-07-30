@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose }) => {
-
   const validationSchema = Yup.object({
     localLimpeza: Yup.string()
       .required("Local de limpeza é obrigatório")
@@ -96,8 +95,7 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose }) => {
         const [_, month, __] = value.split("/");
         const monthNum = parseInt(month, 10);
         return monthNum >= 1 && monthNum <= 12;
-      })
-      ,
+      }),
     observacao: Yup.string()
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
       .test(
@@ -316,19 +314,19 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose }) => {
                 />
               </div>
 
-              <div className="w-full flex justify-center gap-2 -6">
+              <div className="w-full flex justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="bg-[#4a5059] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
+                >
+                  Cancelar
+                </button>
                 <button
                   type="submit"
                   className="bg-[#000000] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
                 >
                   Atualizar
-                </button>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="bg-[#c1121f] text-[#FFFFFF] px-4 py-3 rounded-sm font-medium"
-                >
-                  Cancelar
                 </button>
               </div>
             </Form>

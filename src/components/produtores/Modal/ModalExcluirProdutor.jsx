@@ -12,9 +12,9 @@ const ModalExcluirProdutor = ({ produtorId, isOpen, onClose }) => {
       );
       console.log("Produtor excluido!", response);
       onClose();
-      toast.success("Usuário excluído com sucesso!", {
+      toast.success("Produtor excluído com sucesso!", {
         style: {
-          padding: "20px",
+          padding: "16px",
           color: "#FFFFFF",
           background: "#1a7431",
         },
@@ -50,19 +50,13 @@ const ModalExcluirProdutor = ({ produtorId, isOpen, onClose }) => {
           </DialogTitle>
 
             <div className="flex gap-2">
-                <button onClick={handleExcluirProdutor} className="bg-[#495057] text-[#FFFFFF] px-3 py-3 font-medium rounded-sm">
+                <button onClick={handleExcluirProdutor} className="bg-[#495057] text-[#FFFFFF] px-3 py-2 font-medium rounded-sm">
             Não
           </button>
-          <button onClick={handleExcluirProdutor} className="bg-[#000000] text-[#FFFFFF] px-3 py-3 font-medium rounded-sm">
+          <button onClick={handleExcluirProdutor} className="bg-[#000000] text-[#FFFFFF] px-3 py-2 font-medium rounded-sm">
             Sim
           </button>
             </div>
-          {/* <button onClick={handleExcluirProdutor} className="bg-[#495057] text-[#FFFFFF] px-2 py-3 font-medium rounded-sm">
-            Não
-          </button>
-          <button onClick={handleExcluirProdutor} className="bg-[#000000] text-[#FFFFFF] px-2 py-3 font-medium rounded-sm">
-            Sim
-          </button> */}
         </DialogPanel>
       </div>
     </Dialog>

@@ -16,7 +16,7 @@ const menuItems = [
       },
       {
         id: "acompanhar-producao",
-        title: "Acompanhar Produção",
+        title: "Pesquisar produtor(a)",
         path: "/produtores/acompanhamento",
       },
     ],
@@ -27,11 +27,6 @@ const menuItems = [
     isExpandable: true,
     defaultOpen: true,
     children: [
-      // {
-      //   id: "cadastrar-limpeza",
-      //   title: "Cadastrar atividade de limpeza",
-      //   path: "/usina/limpeza",
-      // },
       {
         id: "atividades-cadastradas",
         title: "Atividades de limpeza cadastradas",
@@ -52,19 +47,19 @@ const menuItems = [
       },
     ],
   },
-  // {
-  //   id: "tecnicos",
-  //   title: "Técnicos",
-  //   isExpandable: true,
-  //   defaultOpen: true,
-  //   children: [
-  //     {
-  //       id: "cadastrar-distribuicao",
-  //       title: "Cadastrar distribuição de sementes",
-  //       path: "/distribuicao/cadastrardistribuicao",
-  //     },
-  //   ],
-  // },
+  {
+    id: "tecnicos",
+    title: "Técnicos",
+    isExpandable: true,
+    defaultOpen: true,
+    children: [
+      {
+        id: "cadastrar-técnicos",
+        title: "Cadastrar técnico",
+        path: "/tecnicos/cadastrartecnicos",
+      },
+    ],
+  },
 ];
 
 const SideBar = () => {
