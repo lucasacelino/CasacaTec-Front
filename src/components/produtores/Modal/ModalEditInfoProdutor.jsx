@@ -17,7 +17,6 @@ const ModalEditInfoProdutor = ({
   const [estados, setEstados] = useState([]);
   const [cidades, setCidades] = useState([]);
 
-  // Adicione estas funções no topo do seu componente
   const parseDateString = (dateStr) => {
     if (!dateStr) return null;
     const [day, month, year] = dateStr.split("/");

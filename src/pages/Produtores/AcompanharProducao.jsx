@@ -71,7 +71,7 @@ const AcompanharProducao = () => {
         Acompanhar produção
       </h1>
 
-      <p>Clique nos estados abaixo para visualizar os produtores(as)</p>
+      <p className="text-lg font-medium text-center mt-1">Clique nos estados abaixo para visualizar os produtores(as)</p>
 
       <div className="flex gap-2 justify-center mt-2">
         <button
@@ -103,7 +103,7 @@ const AcompanharProducao = () => {
         </button>
       </div>
 
-      <p className="text-lg font-medium mt-3">CIDADES - {estadoSelecionado}</p>
+      <p className="text-lg font-medium mt-3">Cidades - {estadoSelecionado}</p>
       <div className="flex flex-wrap border px-2 py-2 gap-2 rounded-sm">
         {filterCidadesEstado.map((cidade, index) => (
           <button

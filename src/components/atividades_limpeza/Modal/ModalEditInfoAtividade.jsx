@@ -190,10 +190,8 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      {/* Fundo escuro */}
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
-      {/* Container do modal */}
       <div className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto">
         <DialogPanel className="w-full max-w-4xl rounded bg-white p-6">
           <DialogTitle className="text-xl font-bold mb-4 border-b-2 border-[#FF6B00]">
@@ -285,7 +283,7 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose }) => {
 
               <div>
                 <label className="block text-sm font-medium text-black mb-1">
-                  Data *
+                  Data*
                 </label>
                 <Field name="dataLimpeza" component={DateInputBr} />
                 <ErrorMessage

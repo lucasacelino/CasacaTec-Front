@@ -6,7 +6,19 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 
+// import { useAuth } from "../../auth/FirebaseGoogleAuth/hooks/useAuth";
+import { useAuth } from "../../../auth/FirebaseGoogleAuth/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+
 const ModalLogout = ({ isOpen, onClose }) => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout()
+    navigate("/login");
+  }
+
   return (
     <div className="fixed top-4 right-4">
       <Transition appear show={isOpen}>
@@ -37,14 +49,15 @@ const ModalLogout = ({ isOpen, onClose }) => {
                   <div className="flex justify-end mt-4 space-x-2">
                     <button
                       type="button"
-                      className="px-4 py-2 text-sm font-medium text-[#FFFFFF] bg-[#6c757d] rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                      className="px-4 py-2 text-sm font-medium text-[#FFFFFF] bg-[#6c757d] rounded-md  focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                       onClick={onClose}
                     >
                       Cancelar
                     </button>
                     <button
+                    onClick={handleLogout}
                       type="button"
-                      className="px-4 py-2 text-sm font-medium text-white bg-[#000000] rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 flex items-center"
+                      className="px-4 py-2 text-sm font-medium text-white bg-[#000000] rounded-md  focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 flex items-center"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

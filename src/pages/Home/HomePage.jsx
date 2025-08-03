@@ -37,7 +37,7 @@ const HomePage = () => {
         Clique para ver informações específicas da safra de cada estado
       </h1>
 
-      <div className="flex justify-center gap-4 mt-2">
+      <div className="flex justify-start gap-2 mt-3">
         <button
           className={`px-4 py-3 rounded-sm font-semibold text-lg ${
             estadoSelecionado === "PB"
@@ -63,8 +63,12 @@ const HomePage = () => {
         </button>
       </div>
 
-      <p className="text-lg font-medium">Regionais - {estadoSelecionado}</p>
-      <CarroselButtonsRegionais UF={dados} />
+      <div className="border border-[#9caea9] px-3 py-3 rounded-sm">
+        <p className="text-lg font-medium mt-1">
+          Regionais - {estadoSelecionado}
+        </p>
+        <CarroselButtonsRegionais UF={dados} />
+      </div>
     </>
   );
 };

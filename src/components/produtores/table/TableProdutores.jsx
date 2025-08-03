@@ -1,20 +1,13 @@
 import { useState } from "react";
 import ModalEditInfoProdutor from "../Modal/ModalEditInfoProdutor";
 import ModalExcluirProdutor from "../Modal/ModalExcluirProdutor";
+import MyDialog from "../../notas_fiscais/NotaFiscalProdutor";
 
 const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeletOpen, setIsDeletOpen] = useState(false);
+  const [isModal, setIsModal] = useState(false);
   const [produtorId, setProdutorId] = useState(null);
-  // const dadosProdutores = dados || [];
-
-  // const handleProdutorAtualizado = (produtorAtualizado) => {
-  //   setDadosoProdutores((prev) =>
-  //     prev.map((produtor) =>
-  //       produtor.id == produtorAtualizado.id ? produtorAtualizado : produtor
-  //     )
-  //   );
-  // };
 
   return (
     <>
@@ -52,6 +45,12 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
                 </th>
                 <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
                   Regional
+                </th>
+                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
+                  Produção
+                </th>
+                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
+                  Notas fiscais
                 </th>
                 <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
                   Ações
@@ -92,6 +91,50 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
                     {dado.nomeRegional}
                   </td>
 
+                  <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
+                    <div className="flex items-center justify-center">
+                      <button className="flex items-center border border-gray-400 p-2 rounded-sm">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 2048 2048"
+                        >
+                          <path
+                            fill="#000000"
+                            d="M1504 393q91 18 167 64t131 112t87 150t31 177q0 101-37 191t-103 160t-153 112t-189 48q-71 106-178 173t-236 81v387H896v-387q-128-14-235-81t-179-173q-101-5-189-47t-153-112t-102-160T0 896q0-93 31-176t86-150t132-113t167-64q29-88 83-160t125-124t157-80T960 0q93 0 178 28t157 81t126 124t83 160m-96 887q79 0 149-30t122-82t83-122t30-150q0-79-30-149t-82-122t-123-83t-149-30h-3q-1 0-3 1q-12-82-51-152t-98-123t-134-81t-159-29q-84 0-159 29t-134 81t-98 122t-51 153h-3q-1 0-3-1q-80 1-150 31t-122 81t-82 122t-30 150q0 80 30 149t82 122t122 83t150 30h45q24 51 59 93t79 75t94 54t107 29v-129q-56-12-103-41t-81-70t-53-94t-19-109h128q0 30 9 58t26 53t40 42t53 28V896h128v373q29-10 52-28t41-42t26-52t9-59h128q0 57-19 109t-53 93t-81 71t-103 41v129q55-8 106-29t95-53t79-75t59-94z"
+                          />
+                        </svg>
+                        <p className="pl-1">Produção</p>
+                      </button>
+                    </div>
+                  </td>
+
+                  <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
+                    <div className="flex items-center">
+                      <button
+                        onClick={() => {
+                          setIsModal(true);
+                          setProdutorId(dado.id);
+                        }}
+                        className="flex items-center border border-gray-400 p-2 rounded-sm"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M3 22V2l1.5 1.5L6 2l1.5 1.5L9 2l1.5 1.5L12 2l1.5 1.5L15 2l1.5 1.5L18 2l1.5 1.5L21 2v20l-1.5-1.5L18 22l-1.5-1.5L15 22l-1.5-1.5L12 22l-1.5-1.5L9 22l-1.5-1.5L6 22l-1.5-1.5zm3-5h12v-2H6zm0-4h12v-2H6zm0-4h12V7H6z"
+                          />
+                        </svg>
+                        <p className="pl-1">Ver notas fiscais</p>
+                      </button>
+                    </div>
+                  </td>
+
                   <td className="py-4 px-6 text-center border-b border-gray-400">
                     <div className="flex items-center justify-center space-x-2">
                       <button
@@ -104,12 +147,12 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="1em"
-                          height="1em"
+                          width="20"
+                          height="20"
                           viewBox="0 0 24 24"
                         >
                           <path
-                            fill="#FF6B00"
+                            fill="#000000"
                             d="M4.42 20.579a1 1 0 0 1-.737-.326a.988.988 0 0 1-.263-.764l.245-2.694L14.983 5.481l3.537 3.536L7.205 20.33l-2.694.245a.95.95 0 0 1-.091.004ZM19.226 8.31L15.69 4.774l2.121-2.121a1 1 0 0 1 1.415 0l2.121 2.121a1 1 0 0 1 0 1.415l-2.12 2.12l-.001.001Z"
                           />
                         </svg>
@@ -158,6 +201,13 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
         produtorId={produtorId}
         isOpen={isDeletOpen}
         onClose={() => setIsDeletOpen(false)}
+      />
+
+      <MyDialog
+        isOpen={isModal}
+        onClose={() => setIsModal(false)}
+        key={isModal ? "open" : "closed"}
+        produtorId={produtorId}
       />
     </>
   );

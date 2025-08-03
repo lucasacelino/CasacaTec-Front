@@ -182,7 +182,11 @@ const ListAtividadesCadastradas = () => {
         </div>
       </Dialog>
 
-      <ModalEditAtividadeLimpeza atividadeId={idAtividade} isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
+      <ModalEditAtividadeLimpeza
+        atividadeId={idAtividade}
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+      />
     </>
   );
 };

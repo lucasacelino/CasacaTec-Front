@@ -118,8 +118,8 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
   };
 
   const handleSubmit = async (values, { resetForm }) => {
-    // const [anoNasc, mesNasc, diaNasc] = values.dataEntrega.split("-");
-    // const dataNascFormatada = `${diaNasc}/${mesNasc}/${anoNasc}`;
+    const [anoNasc, mesNasc, diaNasc] = values.dataEntrega.split("-");
+    const dataNascFormatada = `${diaNasc}/${mesNasc}/${anoNasc}`;
 
     try {
       const dadosEnvio = {
@@ -130,8 +130,7 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
         nomeTecnico: values.nomeTecnico,
         horarioPrevisto: values.horarioPrevisto,
         quantidadeSacos: values.quantidadeSacos,
-        dataEntrega: values.dataEntrega,
-        // dataEntrega: dataNascFormatada,
+        dataEntrega: dataNascFormatada,
         statusEntrega: "Pendente",
         observacao: values.observacao,
       };

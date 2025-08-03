@@ -6,7 +6,7 @@ import HeaderLogin from "../../components/login/HeaderLogin";
 const LoginPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <HeaderLogin />
+      {/* <HeaderLogin /> */}
       <LoginCard />
     </div>
   );

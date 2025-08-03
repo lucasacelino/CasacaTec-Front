@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
-const ModalEditInfoTecnico = ({ tecnicoId, isOpen, onClose }) => {
+const ModalEditInfoTecnico = ({ tecnicoId, isOpen, onClose, onSuccess }) => {
   const validationSchema = Yup.object({
     nomeCompleto: Yup.string()
       .required("Local de limpeza é obrigatório")
@@ -71,6 +71,7 @@ const ModalEditInfoTecnico = ({ tecnicoId, isOpen, onClose }) => {
       );
 
       console.log(response.data);
+      onSuccess();
       toast.success("Técnico atualizado com sucesso!");
       onClose();
     } catch (err) {

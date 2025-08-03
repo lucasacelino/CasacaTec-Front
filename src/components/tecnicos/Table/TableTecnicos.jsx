@@ -8,24 +8,31 @@ const TableTecnicos = () => {
   // const [isDeletOpen, setIsDeletOpen] = useState(false);
   const [dadosTecnicos, setDadosTecnicos] = useState([]);
 
-  useEffect(() => {
-    const carregarDadosProdutores = async () => {
+  // useEffect(() => {
+  //   const carregarDadosProdutores = async () => {
+  //     const response = await axios.get("http://localhost:3000/tecnicos");
+  //     setDadosTecnicos(response.data);
+  //   };
+  //   carregarDadosProdutores();
+  // }, []);
+
+  const carregarDadosTecnicos = async () => {
+    try {
       const response = await axios.get("http://localhost:3000/tecnicos");
       setDadosTecnicos(response.data);
-    };
-    carregarDadosProdutores();
+    } catch (error) {
+      console.error("Erro ao carregar técnicos:", error);
+    }
+  };
+
+  useEffect(() => {
+    carregarDadosTecnicos();
   }, []);
 
-  // const [produtorId, setProdutorId] = useState(null);
-  // const [dadosProdutores, setDadosoProdutores] = useState(dados);
-
-  // const handleProdutorAtualizado = (produtorAtualizado) => {
-  //   setDadosoProdutores((prev) =>
-  //     prev.map((produtor) =>
-  //       produtor.id == produtorAtualizado.id ? produtorAtualizado : produtor
-  //     )
-  //   );
-  // };
+  // Função chamada após a edição bem-sucedida
+  const handleEdicaoConcluida = () => {
+    carregarDadosTecnicos(); // Recarrega os dados
+  };
 
   return (
     <>
@@ -114,7 +121,12 @@ const TableTecnicos = () => {
         </div>
       </div>
 
-      <ModalEditInfoTecnico tecnicoId={tecnicoId} isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} />
+      <ModalEditInfoTecnico
+        tecnicoId={tecnicoId}
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        onSuccess={handleEdicaoConcluida}
+      />
     </>
   );
 };

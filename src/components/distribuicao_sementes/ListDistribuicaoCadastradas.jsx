@@ -2,9 +2,11 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import ModalEditDistribuicao from "./Modal/ModalEditDustribuicao";
 
 const ListDistribuicaoCadastradas = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [idDistribuicao, setIdDistribuicao] = useState(null);
   const [distribuicoesAgendadas, setDistribuicoesAgendadas] = useState([]);
 
@@ -57,7 +59,7 @@ const ListDistribuicaoCadastradas = () => {
 
   const atualizarStatusNoBackend = async (id, novoStatus) => {
     try {
-      const response = await axios.patch(`http://localhost:3000/distr/${id}`, { 
+      const response = await axios.patch(`http://localhost:3000/distr/${id}`, {
         statusEntrega: novoStatus,
       });
 
@@ -80,7 +82,9 @@ const ListDistribuicaoCadastradas = () => {
     // Atualização otimista (opcional)
     setDistribuicoesAgendadas(
       distribuicoesAgendadas.map((distribuicoes) =>
-        distribuicoes.id === id ? { ...distribuicoes, statusEntrega: novoStatus } : distribuicoes
+        distribuicoes.id === id
+          ? { ...distribuicoes, statusEntrega: novoStatus }
+          : distribuicoes
       )
     );
 
@@ -190,9 +194,8 @@ const ListDistribuicaoCadastradas = () => {
                               // onChange={() => toggleStatusEntrega(dados.id)}
                               onChange={(e) => {
                                 // setIdDistribuicao(dados.id);
-                                handleCheckboxChange(e, dados.id)
+                                handleCheckboxChange(e, dados.id);
                                 // toggleStatusEntrega(dados.id);
-                                
                               }}
                             />
                             <span className="text-sm font-bold whitespace-nowrap">
@@ -209,13 +212,17 @@ const ListDistribuicaoCadastradas = () => {
                   <td className="py-4 px-6 text-center border-b border-gray-400">
                     <div className="flex items-center justify-center space-x-2">
                       <button
+                        onClick={() => {
+                          setIsOpenEdit(true);
+                          setIdDistribuicao(dados.id);
+                        }}
                         className="flex items-center p-2 text-[#000000]border-black font-medium rounded-sm transition-colors duration-200 hover:text-blue-800 border border-gray-400"
                         title="Editar"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="1em"
-                          height="1em"
+                          width="20"
+                          height="20"
                           viewBox="0 0 24 24"
                         >
                           <path
@@ -236,8 +243,8 @@ const ListDistribuicaoCadastradas = () => {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width="1em"
-                          height="1em"
+                          width="20"
+                          height="20"
                           viewBox="0 0 24 24"
                           className=""
                         >
@@ -292,6 +299,12 @@ const ListDistribuicaoCadastradas = () => {
           </div>
         </div>
       </Dialog>
+
+      <ModalEditDistribuicao
+        agenndamentoId={idDistribuicao}
+        isOpen={isOpenEdit}
+        onClose={() => setIsOpenEdit(false)}
+      />
     </>
   );
 };

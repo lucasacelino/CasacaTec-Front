@@ -2,16 +2,16 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const ModalExcluirProdutor = ({ produtorId, isOpen, onClose }) => {
-
+const ModalExcluirNotaFiscal = ({ notaId, isOpen, onClose, onSuccess }) => {
   const handleExcluirProdutor = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/produtores/${produtorId}`
+        `http://localhost:3000/notas/${notaId}`
       );
       console.log("Produtor excluido!", response);
       onClose();
-      toast.success("Produtor excluído com sucesso!", {
+      onSuccess();
+      toast.success("Nota fiscal excluída com sucesso!", {
         style: {
           padding: "16px",
           color: "#FFFFFF",
@@ -23,7 +23,7 @@ const ModalExcluirProdutor = ({ produtorId, isOpen, onClose }) => {
         },
       });
     } catch (err) {
-        toast.error("Erro ao excluir produtor", {
+      toast.error("Erro ao excluir produtor", {
         style: {
           padding: "20px",
           color: "#FFFFFF",
@@ -38,28 +38,33 @@ const ModalExcluirProdutor = ({ produtorId, isOpen, onClose }) => {
     }
   };
 
-
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto">
         <DialogPanel className="border w-full max-w-md rounded-xl bg-[#fefae0] p-6 backdrop-blur-2xl duration-100 ease-out data-closed:transform-[scale(95%)] data-closed:opacity-0">
           <DialogTitle className="text-xl font-bold mb-4">
-            Deseja excluir o produtor?
+            Tem certeza que deseja excluir a nota fiscal?
           </DialogTitle>
 
-            <div className="flex gap-2">
-                <button onClick={handleExcluirProdutor} className="bg-[#495057] text-[#FFFFFF] px-3 py-2 font-medium rounded-sm">
-            Não
-          </button>
-          <button onClick={handleExcluirProdutor} className="bg-[#000000] text-[#FFFFFF] px-3 py-2 font-medium rounded-sm">
-            Sim
-          </button>
-            </div>
+          <div className="w-full flex items-center justify-center gap-2">
+            <button
+              onClick={onClose}
+              className="bg-[#495057] text-[#FFFFFF] px-3 py-2 font-medium rounded-sm"
+            >
+              Não
+            </button>
+            <button
+              onClick={handleExcluirProdutor}
+              className="bg-[#000000] text-[#FFFFFF] px-3 py-2 font-medium rounded-sm"
+            >
+              Sim
+            </button>
+          </div>
         </DialogPanel>
       </div>
     </Dialog>
   );
 };
 
-export default ModalExcluirProdutor;
+export default ModalExcluirNotaFiscal;

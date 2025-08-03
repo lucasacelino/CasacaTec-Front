@@ -430,7 +430,7 @@ const CadastroProdutoresForm = () => {
                 <button
                   type="button"
                   onClick={() => navigate("/")}
-                  className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-white bg-[#495057]"
+                  className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-white bg-[#4a5059]"
                 >
                   Cancelar
                 </button>
