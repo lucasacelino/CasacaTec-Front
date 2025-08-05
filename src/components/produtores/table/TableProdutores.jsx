@@ -1,12 +1,15 @@
 import { useState } from "react";
 import ModalEditInfoProdutor from "../Modal/ModalEditInfoProdutor";
 import ModalExcluirProdutor from "../Modal/ModalExcluirProdutor";
-import MyDialog from "../../notas_fiscais/NotaFiscalProdutor";
+// import MyDialog from "../../notas_fiscais/NotaFiscalProdutor";
+import ProducaoModalPage from "../../producao/Modal/ProducaoModalPage";
+import NotaFiscalProdutorModalPage from "../../notas_fiscais/Modal/NotaFiscalProdutorModalPage";
 
 const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeletOpen, setIsDeletOpen] = useState(false);
   const [isModal, setIsModal] = useState(false);
+  const [isProducaoOpen, setProducaoOpen] = useState(false);
   const [produtorId, setProdutorId] = useState(null);
 
   return (
@@ -93,7 +96,13 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
 
                   <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
                     <div className="flex items-center justify-center">
-                      <button className="flex items-center border border-gray-400 p-2 rounded-sm">
+                      <button
+                        onClick={() => {
+                          setProducaoOpen(true);
+                          setProdutorId(dado.id);
+                        }}
+                        className="flex items-center border border-gray-400 p-2 rounded-sm"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="20"
@@ -203,12 +212,20 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
         onClose={() => setIsDeletOpen(false)}
       />
 
-      <MyDialog
+      <NotaFiscalProdutorModalPage
         isOpen={isModal}
         onClose={() => setIsModal(false)}
         key={isModal ? "open" : "closed"}
         produtorId={produtorId}
       />
+
+      <ProducaoModalPage
+        produtorId={produtorId}
+        isOpen={isProducaoOpen}
+        key={isProducaoOpen ? "openProducao" :"closedProducao"}
+        onClose={() => setProducaoOpen(false)}
+      />
+
     </>
   );
 };

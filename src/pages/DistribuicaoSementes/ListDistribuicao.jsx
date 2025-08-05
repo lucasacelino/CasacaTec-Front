@@ -4,8 +4,10 @@ import CadastroCondutorModal from "../../components/distribuicao_sementes/Modal/
 
 const ListDistribuicao = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const handleAny = () => {
-    console.log("teste");
+  const [shouldReload, setShouldReload] = useState(false);
+
+  const handleSaveAtividade = () => {
+    setShouldReload((prev) => !prev);
   };
 
   return (
@@ -46,11 +48,12 @@ const ListDistribuicao = () => {
         </div>
       </div>
 
-      <ListDistribuicaoCadastradas />
+      <ListDistribuicaoCadastradas key={shouldReload} />
+
       <CadastroCondutorModal
         isOpen={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
-        onSave={handleAny}
+        onSave={handleSaveAtividade}
       />
     </>
   );

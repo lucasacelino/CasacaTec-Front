@@ -140,9 +140,9 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
         dadosEnvio
       );
 
-      onSave(response.data);
       resetForm();
       toast.success("Condutor cadastrado com sucesso");
+      onSave(response.data);
       onClose();
     } catch (error) {
       toast.error("Não foi possível cadastrar o condutor");

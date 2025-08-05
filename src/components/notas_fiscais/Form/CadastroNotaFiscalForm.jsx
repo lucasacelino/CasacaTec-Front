@@ -2,7 +2,7 @@ import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
-import { formatarPesoBR } from "../produtores/utils/mascarasInputs";
+import { formatarPesoBR } from "../../produtores/utils/mascarasInputs";
 
 const CadastroNotaFiscalForm = ({ produtorId, onClose, onSuccess }) => {
   const validationSchema = Yup.object({
@@ -23,7 +23,7 @@ const CadastroNotaFiscalForm = ({ produtorId, onClose, onSuccess }) => {
         "Não pode ter espaços no início ou fim",
         (value) => (value ? value.trim() === value : true)
       ),
-      
+
     peso: Yup.string()
       .required("Peso é obrigatório")
       .test(
@@ -32,20 +32,16 @@ const CadastroNotaFiscalForm = ({ produtorId, onClose, onSuccess }) => {
         (value) => {
           if (!value) return false;
 
-          // Permite digitação durante a edição (números com ou sem formatação)
           const valorLimpo = value.replace(/\./g, "").replace(",", ".");
 
-          // Verifica se é um número válido
           const numero = parseFloat(valorLimpo);
           if (isNaN(numero)) return false;
 
-          // Verifica se é positivo
           if (numero < 0) return false;
 
           return true;
         }
       ),
-
     valor: Yup.string()
       .required("Valor é obrigatório")
       .test(
@@ -272,6 +268,7 @@ const CadastroNotaFiscalForm = ({ produtorId, onClose, onSuccess }) => {
 
               <div className="col-span-2 flex justify-end gap-2 pt-2">
                 <button
+                  onClick={onClose}
                   type="button"
                   className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-[#FFFFFF] bg-[#595959]"
                 >

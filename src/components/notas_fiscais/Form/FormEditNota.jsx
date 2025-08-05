@@ -4,11 +4,13 @@ import * as Yup from "yup";
 import {
   floatParaFormatoBR,
   formatarPesoBR,
-} from "../produtores/utils/mascarasInputs";
+} from "../../produtores/utils/mascarasInputs";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import toast from "react-hot-toast";
 
 const FormEditNota = ({ notaId, onClose, onSuccess }) => {
+  const [produtorId, setProdutorId] = useState(null);
+
   const validationSchema = Yup.object({
     numeroNota: Yup.string()
       .required("Nome do condutor é obrigatório")
@@ -105,7 +107,7 @@ const FormEditNota = ({ notaId, onClose, onSuccess }) => {
         {...props}
         value={formatDateForInput(field.value)}
         onChange={handleChange}
-        className="w-full border border-black rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+        className="w-full border-b border-black px-1 py-2 focus:outline-none focus:border-[#FF6B00]"
       />
     );
   };
@@ -125,6 +127,7 @@ const FormEditNota = ({ notaId, onClose, onSuccess }) => {
           `http://localhost:3000/notas/${notaId}`
         );
         const data = response.data;
+        setProdutorId(data.produtorId);
 
         setInitialValues({
           ...data,
@@ -168,7 +171,7 @@ const FormEditNota = ({ notaId, onClose, onSuccess }) => {
       peso: pesoNumerico,
       valor: valorNumerico,
       dataPagamento: values.dataPagamento,
-      // produtorId: produtorId,
+      produtorId: produtorId,
     };
 
     try {

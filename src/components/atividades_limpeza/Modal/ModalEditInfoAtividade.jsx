@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 
-const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose }) => {
+const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose, onSuccess }) => {
   const validationSchema = Yup.object({
     localLimpeza: Yup.string()
       .required("Local de limpeza é obrigatório")
@@ -183,6 +183,7 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose }) => {
       console.log(response.data);
       toast.success("Atividade atualizada com sucesso");
       onClose();
+      onSuccess(response.data);
     } catch (err) {
       console.error(err);
     }

@@ -453,7 +453,7 @@ import * as Yup from "yup";
 import { maskTelefone } from "../../produtores/utils/mascarasInputs";
 import { fetchCitiesByState, fetchStates } from "../../../services/ibgeService";
 
-const ModalEditDistribuicao = ({ agenndamentoId, isOpen, onClose }) => {
+const ModalEditDistribuicao = ({ agendamentoId, isOpen, onClose, onSuccess }) => {
   const [estado, setEstado] = useState([]);
   const [cidades, setCidades] = useState([]);
 
@@ -595,12 +595,12 @@ const ModalEditDistribuicao = ({ agenndamentoId, isOpen, onClose }) => {
   };
 
   useEffect(() => {
-    if (!agenndamentoId || !isOpen) return;
+    if (!agendamentoId || !isOpen) return;
 
     const fetchProdutor = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/distr/${agenndamentoId}`
+          `http://localhost:3000/distr/${agendamentoId}`
         );
 
         const data = response.data;
@@ -632,17 +632,18 @@ const ModalEditDistribuicao = ({ agenndamentoId, isOpen, onClose }) => {
     };
 
     fetchProdutor();
-  }, [agenndamentoId, isOpen]);
+  }, [agendamentoId, isOpen]);
 
   const handleSubmitUpdate = async (values) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/distr/${agenndamentoId}`,
+        `http://localhost:3000/distr/${agendamentoId}`,
         values
       );
 
       console.log(response.data);
       toast.success("Agendamento atualizado com sucesso");
+      onSuccess(response.data);
       onClose();
     } catch (err) {
       console.error("Erro ao atualizar:", err);

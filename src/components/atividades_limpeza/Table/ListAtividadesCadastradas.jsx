@@ -2,7 +2,7 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import ModalEditAtividadeLimpeza from "./Modal/ModalEditInfoAtividade";
+import ModalEditAtividadeLimpeza from "../Modal/ModalEditInfoAtividade";
 
 const ListAtividadesCadastradas = () => {
   const [dadosAtvLimpeza, setDadosAtvLimpeza] = useState([]);
@@ -10,14 +10,30 @@ const ListAtividadesCadastradas = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [idAtividade, setIdAtividade] = useState(null);
 
-  useEffect(() => {
-    const carregarAtvsLimpezas = async () => {
-      const response = await axios.get("http://localhost:3000/atvs_limpeza");
+  const carregarAtvsLimpezas = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/atvs_limpeza`);
       setDadosAtvLimpeza(response.data);
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     carregarAtvsLimpezas();
   }, []);
+
+  const handleAtividade = (atividadeAtualizada) => {
+    setDadosAtvLimpeza(
+      dadosAtvLimpeza.map((atividade) =>
+        atividade.id === atividadeAtualizada.id
+          ? atividadeAtualizada
+          : atividade
+      )
+    );
+
+    carregarAtvsLimpezas();
+  };
 
   const handleExcluirAtividade = async () => {
     try {
@@ -186,6 +202,7 @@ const ListAtividadesCadastradas = () => {
         atividadeId={idAtividade}
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
+        onSuccess={handleAtividade}
       />
     </>
   );

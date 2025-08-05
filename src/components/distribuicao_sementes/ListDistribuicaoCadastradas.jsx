@@ -10,14 +10,24 @@ const ListDistribuicaoCadastradas = () => {
   const [idDistribuicao, setIdDistribuicao] = useState(null);
   const [distribuicoesAgendadas, setDistribuicoesAgendadas] = useState([]);
 
-  useEffect(() => {
-    const carregarAtividades = async () => {
-      const response = await axios.get("http://localhost:3000/distr");
-      setDistribuicoesAgendadas(response.data);
-    };
+  const carregarAtividades = async () => {
+    const response = await axios.get("http://localhost:3000/distr");
+    setDistribuicoesAgendadas(response.data);
+  };
 
+  useEffect(() => {
     carregarAtividades();
   }, []);
+
+  const handleAtividade = (atividadeAtualizada) => {
+    setDistribuicoesAgendadas(
+      distribuicoesAgendadas.map((atividade) =>
+        atividade.id === atividadeAtualizada.id
+          ? atividadeAtualizada
+          : atividade
+      )
+    );
+  };
 
   const handleExcluirAtividade = async () => {
     try {
@@ -301,9 +311,10 @@ const ListDistribuicaoCadastradas = () => {
       </Dialog>
 
       <ModalEditDistribuicao
-        agenndamentoId={idDistribuicao}
+        agendamentoId={idDistribuicao}
         isOpen={isOpenEdit}
         onClose={() => setIsOpenEdit(false)}
+        onSuccess={handleAtividade}
       />
     </>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ListAtividadesCadastradas from "../../components/atividades_limpeza/ListAtividadesCadastradas";
 import CadastroAtividadeModal from "../../components/atividades_limpeza/Modal/CadastroAtividadeModal";
+import ListAtividadesCadastradas from "../../components/atividades_limpeza/Table/ListAtividadesCadastradas";
 
 const ListAtividadesLimpezaCadastradas = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

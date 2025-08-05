@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ModalExcluirNotaFiscal from "./ModaDeleteNotaFiscal";
-import FormEditNota from "./FormEditNota";
+import ModalExcluirNotaFiscal from "../Modal/ModaDeleteNotaFiscal";
+import FormEditNota from "../Form/FormEditNota";
 
 const NotaFiscalDetails = ({
   notaId,

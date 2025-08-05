@@ -65,7 +65,6 @@ const HeaderLogin = () => {
                     d="m7 10l5 5l5-5"
                   />
                 </svg>
-                {/* sair */}
               </button>
             </div>
           ) : (

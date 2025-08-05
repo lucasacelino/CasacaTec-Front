@@ -1,16 +1,30 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { useState } from "react";
-import CadastroNotaFiscalForm from "./CadastroNotaFiscalForm";
-import CardInfoNota from "./CardInfoNota";
-// import Teste from "./Teste";
+import { useEffect, useState } from "react";
+import CadastroNotaFiscalForm from "../Form/CadastroNotaFiscalForm";
+import CardInfoNota from "../Card/CardInfoNota";
+import axios from "axios";
 
-function MyDialog({ produtorId, isOpen, onClose }) {
+function NotaFiscalProdutorModalPage({ produtorId, isOpen, onClose }) {
   const [isOpenCadNota, setIsOpenCadNota] = useState(false);
+  const [dadosProdutor, setDadosProdutor] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
 
   const handleNotaCadastrada = () => {
     setRefreshKey((prevKey) => prevKey + 1);
   };
+
+  useEffect(() => {
+    const responseDadosProdutor = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/produtores/${produtorId}`);
+        setDadosProdutor(response.data.nomeCompleto);
+      } catch (error) {
+        console.error(error)
+      }
+    };
+
+    responseDadosProdutor();
+  }, [produtorId]);
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -18,9 +32,24 @@ function MyDialog({ produtorId, isOpen, onClose }) {
 
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel className="rounded-xl w-full max-w-[60vw] max-h-[90vh] flex flex-col bg-white border border-gray-200 shadow-lg">
-          <h1 className="p-4 text-xl font-bold sticky top-0 border-b-2 border-[#ff6600]">
-            Notas fiscais
-          </h1>
+
+          <div className="flex justify-between sticky top-0 border-b-2 border-[#ff6600]">
+            <h1 className="p-2 text-xl font-bold">Notas Fiscais - {dadosProdutor}</h1>
+
+            <button onClick={onClose} className="mr-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill="currentColor"
+                  d="M10 8.586L2.929 1.515L1.515 2.929L8.586 10l-7.071 7.071l1.414 1.414L10 11.414l7.071 7.071l1.414-1.414L11.414 10l7.071-7.071l-1.414-1.414z"
+                />
+              </svg>
+            </button>
+          </div>
 
           <div className="flex-1 overflow-y-auto px-2 py-2">
             <div className="w-full flex items-center justify-center">
@@ -74,19 +103,10 @@ function MyDialog({ produtorId, isOpen, onClose }) {
 
             <CardInfoNota key={refreshKey} produtorId={produtorId} />
           </div>
-
-          <div className="p-4 sticky bottom-0 border-t border-gray-200 flex justify-end">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-[#4a4d59] text-[#FFFFFF] rounded-md"
-            >
-              Fechar
-            </button>
-          </div>
         </DialogPanel>
       </div>
     </Dialog>
   );
 }
 
-export default MyDialog;
+export default NotaFiscalProdutorModalPage;

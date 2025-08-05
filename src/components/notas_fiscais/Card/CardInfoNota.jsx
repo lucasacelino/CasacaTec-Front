@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { floatParaFormatoBR } from "../produtores/utils/mascarasInputs";
+import { floatParaFormatoBR } from "../../produtores/utils/mascarasInputs";
 import NotaFiscalDetails from "./NotaFiscalDetails";
 
 const CardInfoNota = ({ produtorId }) => {
@@ -17,23 +17,6 @@ const CardInfoNota = ({ produtorId }) => {
       console.error(err);
     }
   };
-
-  // useEffect(() => {
-  //   const fetchDados = async () => {
-  //     try {
-  //       const res = await axios.get(
-  //         `http://localhost:3000/notas?produtorId=${produtorId}`
-  //       );
-
-  //       setDta(res.data);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-
-  //   fetchDados();
-  // }, [produtorId]);
-
 
   useEffect(() => {
     fetchDados();

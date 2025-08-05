@@ -27,7 +27,6 @@ const DadosSafraCidadesTable = ({ data }) => {
               >
                 <td className="underline py-2 px-4 border-b border-gray-400 font-medium">
                   <div>
-                    {/* {datas.nomeMunicipio} */}
                     <button className="flex items-center">
                       <p>{datas.nomeMunicipio}</p>
                       <svg
