@@ -15,9 +15,9 @@ const LoginCard = () => {
   return (
     <div className="flex h-screen">
       <div className="w-1/2 b-[#e9ecef] flex flex-col items-center justify-center border-r border-[#ced4da] shadow-lg">
-        <div className="border border-[#ced4da] p-6 rounded-lg bg-white shadow-md">
+        <div className="border border-[##445661] p-6 rounded-lg bg-white shadow-md">
           <h1 className="text-3xl font-bold mb-1 text-center">Login</h1>
-          <p className="text-black-600 mb-3 text-2x">
+          <p className="text-black mb-3 text-2x font-medium">
             Use sua conta do Google para acessar o sistema
           </p>
 

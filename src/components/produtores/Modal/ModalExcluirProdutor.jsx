@@ -2,14 +2,16 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const ModalExcluirProdutor = ({ produtorId, isOpen, onClose }) => {
+const ModalExcluirProdutor = ({ produtorId, isOpen, onClose, onProdutorAtualizado }) => {
 
   const handleExcluirProdutor = async () => {
     try {
       const response = await axios.delete(
         `http://localhost:3000/produtores/${produtorId}`
       );
+
       console.log("Produtor excluido!", response);
+      onProdutorAtualizado(produtorId);
       onClose();
       toast.success("Produtor excluído com sucesso!", {
         style: {
@@ -49,7 +51,7 @@ const ModalExcluirProdutor = ({ produtorId, isOpen, onClose }) => {
           </DialogTitle>
 
             <div className="flex gap-2">
-                <button onClick={handleExcluirProdutor} className="bg-[#495057] text-[#FFFFFF] px-3 py-2 font-medium rounded-sm">
+                <button onClick={onClose} className="bg-[#495057] text-[#FFFFFF] px-3 py-2 font-medium rounded-sm">
             Não
           </button>
           <button onClick={handleExcluirProdutor} className="bg-[#000000] text-[#FFFFFF] px-3 py-2 font-medium rounded-sm">

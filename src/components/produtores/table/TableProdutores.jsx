@@ -1,7 +1,6 @@
 import { useState } from "react";
 import ModalEditInfoProdutor from "../Modal/ModalEditInfoProdutor";
 import ModalExcluirProdutor from "../Modal/ModalExcluirProdutor";
-// import MyDialog from "../../notas_fiscais/NotaFiscalProdutor";
 import ProducaoModalPage from "../../producao/Modal/ProducaoModalPage";
 import NotaFiscalProdutorModalPage from "../../notas_fiscais/Modal/NotaFiscalProdutorModalPage";
 
@@ -167,6 +166,7 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
                         </svg>
                         <p className="pl-1">Editar</p>
                       </button>
+
                       <button
                         onClick={() => {
                           setIsDeletOpen(true);
@@ -199,7 +199,6 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
       </div>
 
       <ModalEditInfoProdutor
-        // key={produtorId}
         produtorId={produtorId}
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
@@ -210,6 +209,7 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
         produtorId={produtorId}
         isOpen={isDeletOpen}
         onClose={() => setIsDeletOpen(false)}
+        onProdutorAtualizado={onProdutorAtualizado}
       />
 
       <NotaFiscalProdutorModalPage

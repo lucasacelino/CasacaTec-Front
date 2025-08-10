@@ -2,7 +2,8 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import ModalEditDistribuicao from "./Modal/ModalEditDustribuicao";
+import ModalEditDistribuicao from "./Modal/ModalEditDistribuicao";
+// import ModalEditDistribuicao from "./Modal/ModalEditDustribuicao";
 
 const ListDistribuicaoCadastradas = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -247,7 +248,6 @@ const ListDistribuicaoCadastradas = () => {
                           setModalIsOpen(true);
                           setIdDistribuicao(dados.id);
                         }}
-                        // onChange={() => onExcluir(dados.id)}
                         className="p-2 flex items-center font-medium text-[#000000] rounded-sm transition-colors duration-200 hover:text-red-800 border border-gray-400"
                         title="Excluir"
                       >

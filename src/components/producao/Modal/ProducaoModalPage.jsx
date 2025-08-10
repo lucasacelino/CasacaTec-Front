@@ -7,8 +7,7 @@ import axios from "axios";
 const ProducaoModalPage = ({ produtorId, isOpen, onClose }) => {
   const [isOpenCadProducao, setOpenCadProducao] = useState(false);
   const [dadosProducao, setDadosProducao] = useState([]);
-  // const [dadosProdutor, setDadosProdutor] = useState("");
-
+  
   const anoAtual = new Date().getFullYear();
 
   const recarregarDados = async () => {

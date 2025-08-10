@@ -66,7 +66,8 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
           const dataAtual = new Date();
           dataAtual.setHours(0, 0, 0, 0);
 
-          return data >= dataAtual && data.getFullYear() === anoAtual;
+          // return data >= dataAtual && data.getFullYear() === anoAtual;
+          return data.getFullYear() === anoAtual;
         }
       ),
   });

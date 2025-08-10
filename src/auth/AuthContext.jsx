@@ -50,12 +50,10 @@ export const AuthProvider = ({ children }) => {
     try {
       await signOut(auth);
     } catch (error) {
-      // console.log("Erro");
       console.error("Erro no logout:", error);
     }
   };
 
-  // Observa mudanças no estado de autenticação
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
