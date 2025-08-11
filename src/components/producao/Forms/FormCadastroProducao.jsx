@@ -17,9 +17,9 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
       )
       .min(2, "O nome deve ter pelo menos 2 letras"),
     culturaConsorcio: Yup.string()
-      .required("A cultura do consórcio é obrigatória")
+      // .required("A cultura do consórcio é obrigatória")
       // .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
-      .matches(/^[a-zA-Zà-úÀ-Ú\s,]+$/, 'Use apenas letras e vírgulas')
+      .matches(/^[a-zA-Zà-úÀ-Ú\s,]+$/, "Use apenas letras e vírgulas")
       .test(
         "no-trailing-spaces",
         "A cultura do consórcio não pode ter espaços no início ou fim",
@@ -119,7 +119,7 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ setFieldValue }) => (
+        {({ values, setFieldValue }) => (
           <Form className="grid grid-cols-2 gap-4">
             <div>
               <label
@@ -134,8 +134,8 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
                 className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
               >
                 <option value="">Selecione um tipo de arranjo produtivo</option>
-                <option value="consório">consórcio</option>
-                <option value="solteiro">solteiro</option>
+                <option value="Consórcio">Consórcio</option>
+                <option value="Solteiro">Solteiro</option>
               </Field>
               <ErrorMessage
                 name="arranjoProdutivo"
@@ -154,6 +154,7 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
               <Field
                 name="culturaConsorcio"
                 type="text"
+                disabled={values.arranjoProdutivo === "Solteiro"}
                 className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
               />
               <ErrorMessage

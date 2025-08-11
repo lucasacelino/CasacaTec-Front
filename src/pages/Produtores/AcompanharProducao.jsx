@@ -632,6 +632,8 @@ const AcompanharProducao = () => {
         </button>
       </div>
 
+      {/* <button>Abrir mapa</button> */}
+
       {/* Seção de Filtros */}
       <div className="flex justify-between items-center mt-8">
         <p className="font-bold text-xl">
