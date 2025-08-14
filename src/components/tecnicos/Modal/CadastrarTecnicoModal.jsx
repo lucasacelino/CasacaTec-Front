@@ -27,15 +27,18 @@ const CadastroTecnicoModal = ({ isOpen, onClose, onSave }) => {
         (value) => (value ? value.trim() === value : true)
       )
       .min(2, "O nome deve ter pelo menos 2 letras"),
+    // email: Yup.string()
+    //   .required("Material de limpeza é obrigatório")
+    //   .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+    //   .test(
+    //     "no-trailing-spaces",
+    //     "O material de limpeza não pode ter espaços no início ou fim",
+    //     (value) => (value ? value.trim() === value : true)
+    //   )
+
     email: Yup.string()
-      .required("Material de limpeza é obrigatório")
-      .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
-      .test(
-        "no-trailing-spaces",
-        "O material de limpeza não pode ter espaços no início ou fim",
-        (value) => (value ? value.trim() === value : true)
-      )
-      .min(2, "O nome deve ter pelo menos 2 letras"),
+      .required("material de limpeza é obrigatório")
+      .email("email inválido"),
     telefone: Yup.string()
       .required("Telefone é obrigatório")
       .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
@@ -47,7 +50,6 @@ const CadastroTecnicoModal = ({ isOpen, onClose, onSave }) => {
   };
 
   const handleSubmit = async (values, { resetForm }) => {
-
     try {
       const dadosEnvio = {
         nomeCompleto: values.nomeCompleto,

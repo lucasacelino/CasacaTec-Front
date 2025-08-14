@@ -37,19 +37,19 @@ const DashboardInfoGeraisSafra = () => {
       icon: fazenda,
     },
     {
-      titulo: "Sacos Distribuídas",
-      valor: 12,
+      titulo: "Sacos Distribuídos",
+      valor: 0,
       icon: semente,
     },
     {
       titulo: "Hectares plantados",
-      valor: 12,
+      valor: 0,
       icon: algodao,
     },
   ];
 
   return (
-    <div className="flex flex-row gap-4">
+    <div className="flex flex-row gap-2">
       {dadosCards.map((dados, index) => (
         <CardItem
           key={index}

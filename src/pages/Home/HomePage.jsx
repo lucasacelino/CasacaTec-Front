@@ -66,8 +66,7 @@ const HomePage = () => {
       <div className="border border-[#9caea9] px-3 py-3 rounded-sm">
         <p className="text-lg font-medium">Dados Safra - {estadoSelecionado}</p>
 
-        <div className="flex gap-3">
-
+        {/* <div className="flex gap-3">
           <div className="flex items-center flex-col border border-[#fa5c00] px-4 py-1 rounded-sm">
             <span>Total produtores</span>
             <span className="text-lg font-bold">82</span>
@@ -88,7 +87,7 @@ const HomePage = () => {
             <span className="text-lg font-bold">82</span>
           </div>
 
-        </div>
+        </div> */}
 
         <p className="text-lg font-medium mt-4">
           Regionais - {estadoSelecionado}

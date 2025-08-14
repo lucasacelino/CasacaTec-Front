@@ -51,8 +51,19 @@ const ListAtividadesCadastradas = () => {
 
   if (dadosAtvLimpeza.length == 0) {
     return (
-      <div className="mt-4 w-full flex flex-col items-center">
-        <p className="font-medium">Nenhuma atividade cadastrada</p>
+      <div className="mt-4 w-full flex items-center justify-center gap-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          viewBox="-2 -2 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10s-4.477 10-10 10m0-2a8 8 0 1 0 0-16a8 8 0 0 0 0 16m0-13a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1m0 10a1 1 0 1 1 0-2a1 1 0 0 1 0 2"
+          />
+        </svg>
+        <p className="font-medium text-lg">Nenhuma atividade cadastrada</p>
       </div>
     );
   }
