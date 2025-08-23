@@ -6,9 +6,9 @@ import toast from "react-hot-toast";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
-const ModalEditInfoTecnico = ({ tecnicoId, isOpen, onClose, onSuccess }) => {
+const ModalEditInfoTecnico = ({ id, isOpen, onClose, onSuccess }) => {
   const validationSchema = Yup.object({
-    nomeCompleto: Yup.string()
+    nomeTecnico: Yup.string()
       .required("Local de limpeza é obrigatório")
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
       .test(
@@ -19,34 +19,34 @@ const ModalEditInfoTecnico = ({ tecnicoId, isOpen, onClose, onSuccess }) => {
         }
       )
       .min(2, "O nome deve ter pelo menos 2 letras"),
-    email: Yup.string()
+    emailTecnico: Yup.string()
       .required("material de limpeza é obrigatório")
       .email("email inválido"),
-    telefone: Yup.string()
+    telefoneTecnico: Yup.string()
       .required("Telefone é obrigatório")
       .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
   });
 
   const [initialValues, setInitialValues] = useState({
-    nomeCompleto: "",
-    email: "",
-    telefone: "",
+    nomeTecnico: "",
+    emailTecnico: "",
+    telefoneTecnico: "",
   });
 
   useEffect(() => {
-    if (!tecnicoId || !isOpen) return;
+    if (!id || !isOpen) return;
 
     const fetchTecnico = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/tecnicos/${tecnicoId}`
+          `http://localhost:8080/tecnicos/${id}`
         );
 
         setInitialValues({
-          id: response.data.id,
-          nomeCompleto: response.data.nomeCompleto || "",
-          email: response.data.email || "",
-          telefone: response.data.telefone || "",
+          idTecnico: response.data.idTecnico,
+          nomeTecnico: response.data.nomeTecnico || "",
+          emailTecnico: response.data.emailTecnico || "",
+          telefoneTecnico: response.data.telefoneTecnico || "",
         });
 
         console.log(response.data);
@@ -56,17 +56,17 @@ const ModalEditInfoTecnico = ({ tecnicoId, isOpen, onClose, onSuccess }) => {
     };
 
     fetchTecnico();
-  }, [tecnicoId, isOpen]);
+  }, [id, isOpen]);
 
   const handleTelefoneChange = (e, setFieldValue) => {
     const formattedValue = maskTelefone(e.target.value);
-    setFieldValue("telefone", formattedValue);
+    setFieldValue("telefoneTecnico", formattedValue);
   };
 
   const handleSubmitUpdate = async (values) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/tecnicos/${tecnicoId}`,
+        `http://localhost:8080/tecnicos/${id}`,
         values
       );
 
@@ -99,18 +99,18 @@ const ModalEditInfoTecnico = ({ tecnicoId, isOpen, onClose, onSuccess }) => {
               <Form className="grid grid-cols-2 gap-4 mt-4">
                 <div>
                   <label
-                    htmlFor="nomeCompleto"
+                    htmlFor="nomeTecnico"
                     className="block text-sm font-medium text-black"
                   >
                     Nome Completo*
                   </label>
                   <Field
-                    name="nomeCompleto"
+                    name="nomeTecnico"
                     type="text"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                   />
                   <ErrorMessage
-                    name="nomeCompleto"
+                    name="nomeTecnico"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
@@ -118,18 +118,18 @@ const ModalEditInfoTecnico = ({ tecnicoId, isOpen, onClose, onSuccess }) => {
 
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="emailTecnico"
                     className="block text-sm font-medium text-black"
                   >
                     Email*
                   </label>
                   <Field
-                    name="email"
+                    name="emailTecnico"
                     type="text"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                   />
                   <ErrorMessage
-                    name="email"
+                    name="emailTecnico"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
@@ -137,19 +137,19 @@ const ModalEditInfoTecnico = ({ tecnicoId, isOpen, onClose, onSuccess }) => {
 
                 <div>
                   <label
-                    htmlFor="telefone"
+                    htmlFor="telefoneTecnico"
                     className="block text-sm font-medium text-black"
                   >
                     Telefone*
                   </label>
                   <Field
-                    name="telefone"
+                    name="telefoneTecnico"
                     type="text"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                     onChange={(e) => handleTelefoneChange(e, setFieldValue)}
                   />
                   <ErrorMessage
-                    name="telefone"
+                    name="telefoneTecnico"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />

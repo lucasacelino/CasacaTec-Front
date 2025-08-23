@@ -61,7 +61,7 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
             </thead>
             <tbody>
               {dados.map((dado) => (
-                <tr key={dado.id}>
+                <tr key={dado.idProdutor}>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
                     {dado.nomeCompleto}
                   </td>
@@ -84,13 +84,13 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
                     {dado.endereco}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
-                    {dado.uf}
+                    {dado.estado}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
-                    {dado.nomeMunicipio}
+                    {dado.municipio}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
-                    {dado.nomeRegional}
+                    {dado.regional}
                   </td>
 
                   <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">

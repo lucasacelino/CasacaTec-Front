@@ -12,7 +12,7 @@ const ListAtividadesCadastradas = () => {
 
   const carregarAtvsLimpezas = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/atvs_limpeza`);
+      const response = await axios.get(`http://localhost:8080/limpezas`);
       setDadosAtvLimpeza(response.data);
     } catch (error) {
       console.error(error);
@@ -26,20 +26,20 @@ const ListAtividadesCadastradas = () => {
   const handleAtividade = (atividadeAtualizada) => {
     setDadosAtvLimpeza(
       dadosAtvLimpeza.map((atividade) =>
-        atividade.id === atividadeAtualizada.id
+        atividade.idLimpeza === atividadeAtualizada.idLimpeza
           ? atividadeAtualizada
           : atividade
       )
     );
 
-    carregarAtvsLimpezas();
+    // carregarAtvsLimpezas();
   };
 
   const handleExcluirAtividade = async () => {
     try {
-      await axios.delete(`http://localhost:3000/atvs_limpeza/${idAtividade}`);
+      await axios.delete(`http://localhost:8080/limpezas/deletarLimpeza/${idAtividade}`);
       setDadosAtvLimpeza(
-        dadosAtvLimpeza.filter((atividade) => atividade.id !== idAtividade)
+        dadosAtvLimpeza.filter((atividade) => atividade.idLimpeza !== idAtividade)
       );
       toast.success("Atividade de limpeza excluída com sucesso");
       setIsDeleteOpen(false);
@@ -87,9 +87,9 @@ const ListAtividadesCadastradas = () => {
                 <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
                   Fiscal
                 </th>
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left whitespace-nowrap">
+                {/* <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left whitespace-nowrap">
                   Data de limpeza
-                </th>
+                </th> */}
                 <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
                   Observação
                 </th>
@@ -100,7 +100,7 @@ const ListAtividadesCadastradas = () => {
             </thead>
             <tbody>
               {dadosAtvLimpeza.map((dados) => (
-                <tr key={dados.id}>
+                <tr key={dados.idLimpeza}>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
                     {dados.localLimpeza}
                   </td>
@@ -113,20 +113,23 @@ const ListAtividadesCadastradas = () => {
                   <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
                     {dados.fiscalLimpeza}
                   </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
+
+                  {/* <td className="py-2 px-4 border-b border-gray-400 font-medium">
                     {dados.dataLimpeza}
-                  </td>
+                  </td> */}
+
                   <td className="py-2 px-4 font-medium border-b border-gray-400 max-w-xs break-words">
                     {dados.observacao}
                   </td>
-                  <td className="py-2 px-4 text-center border-b border-gray-400">
-                    <div className="flex items-center justify-center space-x-2">
+
+                  <td className="py-2 px-3 text-center border-b border-gray-400">
+                    <div className="flex gap-2 justify-start">
                       <button
                         onClick={() => {
                           setIsEditOpen(true);
-                          setIdAtividade(dados.id);
+                          setIdAtividade(dados.idLimpeza);
                         }}
-                        className="flex items-center p-2 text-[#000000]border-black font-medium rounded-sm transition-colors duration-200 hover:text-blue-800 border border-gray-400"
+                        className="flex items-center p-2 text-[#000000] border-black font-medium rounded-sm transition-colors duration-200 hover:text-blue-800 border border-gray-400"
                         title="Editar"
                       >
                         <svg
@@ -147,7 +150,7 @@ const ListAtividadesCadastradas = () => {
                         title="Excluir"
                         onClick={() => {
                           setIsDeleteOpen(true);
-                          setIdAtividade(dados.id);
+                          setIdAtividade(dados.idLimpeza);
                         }}
                       >
                         <svg
@@ -210,7 +213,7 @@ const ListAtividadesCadastradas = () => {
       </Dialog>
 
       <ModalEditAtividadeLimpeza
-        atividadeId={idAtividade}
+        id={idAtividade}
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
         onSuccess={handleAtividade}

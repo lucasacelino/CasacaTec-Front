@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 
-const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose, onSuccess }) => {
+const ModalEditAtividadeLimpeza = ({ id, isOpen, onClose, onSuccess }) => {
   const validationSchema = Yup.object({
     localLimpeza: Yup.string()
       .required("Local de limpeza é obrigatório")
@@ -51,51 +51,51 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose, onSuccess }) 
         }
       )
       .min(2, "O nome deve ter pelo menos 2 letras"),
-    dataLimpeza: Yup.string()
-      .required("Data de limpeza é obrigatória")
-      .test("formato-data", "Formato inválido (use DD/MM/AAAA)", (value) => {
-        if (!value) return false;
-        return /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/.test(value);
-      })
-      .test("data-valida", "Data inválida", (value) => {
-        if (!value) return false;
-        const [day, month, year] = value.split("/");
-        const date = new Date(`${year}-${month}-${day}`);
-        return !isNaN(date.getTime());
-      })
-      .test("data-futura", "Data não pode ser no futuro", (value) => {
-        if (!value) return false;
-        const [day, month, year] = value.split("/");
-        const inputDate = new Date(`${year}-${month}-${day}`);
-        return inputDate <= new Date();
-      })
-      .test(
-        "ano-valido",
-        "Ano inválido (deve ser entre 1900 e o ano atual)",
-        (value) => {
-          if (!value) return false;
-          const [_, __, year] = value.split("/");
-          const yearNum = parseInt(year, 10);
-          const currentYear = new Date().getFullYear();
-          return yearNum >= 1900 && yearNum <= currentYear;
-        }
-      )
-      .test("dia-valido", "Dia inválido para este mês", (value) => {
-        if (!value) return false;
-        const [day, month, year] = value.split("/");
-        const date = new Date(year, month - 1, day);
-        return (
-          date.getDate() == day &&
-          date.getMonth() == month - 1 &&
-          date.getFullYear() == year
-        );
-      })
-      .test("mes-valido", "Mês inválido (1-12)", (value) => {
-        if (!value) return false;
-        const [_, month, __] = value.split("/");
-        const monthNum = parseInt(month, 10);
-        return monthNum >= 1 && monthNum <= 12;
-      }),
+    // dataLimpeza: Yup.string()
+    //   .required("Data de limpeza é obrigatória")
+    //   .test("formato-data", "Formato inválido (use DD/MM/AAAA)", (value) => {
+    //     if (!value) return false;
+    //     return /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/.test(value);
+    //   })
+    //   .test("data-valida", "Data inválida", (value) => {
+    //     if (!value) return false;
+    //     const [day, month, year] = value.split("/");
+    //     const date = new Date(`${year}-${month}-${day}`);
+    //     return !isNaN(date.getTime());
+    //   })
+    //   .test("data-futura", "Data não pode ser no futuro", (value) => {
+    //     if (!value) return false;
+    //     const [day, month, year] = value.split("/");
+    //     const inputDate = new Date(`${year}-${month}-${day}`);
+    //     return inputDate <= new Date();
+    //   })
+    //   .test(
+    //     "ano-valido",
+    //     "Ano inválido (deve ser entre 1900 e o ano atual)",
+    //     (value) => {
+    //       if (!value) return false;
+    //       const [_, __, year] = value.split("/");
+    //       const yearNum = parseInt(year, 10);
+    //       const currentYear = new Date().getFullYear();
+    //       return yearNum >= 1900 && yearNum <= currentYear;
+    //     }
+    //   )
+    //   .test("dia-valido", "Dia inválido para este mês", (value) => {
+    //     if (!value) return false;
+    //     const [day, month, year] = value.split("/");
+    //     const date = new Date(year, month - 1, day);
+    //     return (
+    //       date.getDate() == day &&
+    //       date.getMonth() == month - 1 &&
+    //       date.getFullYear() == year
+    //     );
+    //   })
+    //   .test("mes-valido", "Mês inválido (1-12)", (value) => {
+    //     if (!value) return false;
+    //     const [_, month, __] = value.split("/");
+    //     const monthNum = parseInt(month, 10);
+    //     return monthNum >= 1 && monthNum <= 12;
+    //   }),
     observacao: Yup.string()
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
       .test(
@@ -113,7 +113,7 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose, onSuccess }) 
     materialLimpeza: "",
     responsavelLimpeza: "",
     fiscalLimpeza: "",
-    dataLimpeza: "",
+    // dataLimpeza: "",
     observacao: "",
   });
 
@@ -146,21 +146,21 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose, onSuccess }) 
   };
 
   useEffect(() => {
-    if (!atividadeId || !isOpen) return;
+    if (!id || !isOpen) return;
 
-    const fetchProdutor = async () => {
+    const fetchAtividades = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/atvs_limpeza/${atividadeId}`
+          `http://localhost:8080/limpezas/${id}`
         );
 
         setInitialValues({
-          id: response.data.id,
+          idLimpeza: response.data.idLimpeza,
           localLimpeza: response.data.localLimpeza || "",
           materialLimpeza: response.data.materialLimpeza || "",
           responsavelLimpeza: response.data.responsavelLimpeza || "",
           fiscalLimpeza: response.data.fiscalLimpeza || "",
-          dataLimpeza: response.data.dataLimpeza || "",
+          // dataLimpeza: response.data.dataLimpeza || "",
           observacao: response.data.observacao || "",
         });
 
@@ -170,13 +170,13 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose, onSuccess }) 
       }
     };
 
-    fetchProdutor();
-  }, [atividadeId, isOpen]);
+    fetchAtividades();
+  }, [id, isOpen]);
 
   const handleSubmitUpdate = async (values) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/atvs_limpeza/${atividadeId}`,
+        `http://localhost:8080/limpezas/${id}`,
         values
       );
 
@@ -186,6 +186,7 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose, onSuccess }) 
       onSuccess(response.data);
     } catch (err) {
       console.error(err);
+      toast.error("Erro ao atualizar");
     }
   };
 
@@ -282,7 +283,7 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose, onSuccess }) 
                 />
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-black mb-1">
                   Data*
                 </label>
@@ -292,7 +293,7 @@ const ModalEditAtividadeLimpeza = ({ atividadeId, isOpen, onClose, onSuccess }) 
                   component="div"
                   className="text-red-500 text-sm mt-1"
                 />
-              </div>
+              </div> */}
 
               <div className="w-full">
                 <label

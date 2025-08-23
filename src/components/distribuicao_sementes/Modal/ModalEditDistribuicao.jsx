@@ -597,10 +597,10 @@ const ModalEditDistribuicao = ({ agendamentoId, isOpen, onClose, onSuccess }) =>
   useEffect(() => {
     if (!agendamentoId || !isOpen) return;
 
-    const fetchProdutor = async () => {
+    const fetchDistribuicoes = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/distr/${agendamentoId}`
+          `http://localhost:8080/distriSementes/${agendamentoId}`
         );
 
         const data = response.data;
@@ -613,14 +613,14 @@ const ModalEditDistribuicao = ({ agendamentoId, isOpen, onClose, onSuccess }) =>
 
         setInitialValues({
           ...data,
-          id: data.id,
+          idDistribuicao: data.idDistribuicao,
           nomeCondutor: data.nomeCondutor || "",
-          telefoneCondutor: data.telefoneCondutor || "",
+          telefone: data.telefone || "",
           estado: data.estado || "",
           cidade: data.cidade || "",
           nomeTecnico: data.nomeTecnico || "",
-          horarioPrevisto: data.horarioPrevisto || "",
-          quantidadeSacos: data.quantidadeSacos || "",
+          horario: data.horario || "",
+          qtdSacos: data.qtdSacos || "",
           dataEntrega: data.dataEntrega || "",
           statusEntrega: data.statusEntrega || "",
           observacao: data.observacao || "",
@@ -631,13 +631,13 @@ const ModalEditDistribuicao = ({ agendamentoId, isOpen, onClose, onSuccess }) =>
       }
     };
 
-    fetchProdutor();
+    fetchDistribuicoes();
   }, [agendamentoId, isOpen]);
 
   const handleSubmitUpdate = async (values) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/distr/${agendamentoId}`,
+        `http://localhost:8080/distriSementes/${agendamentoId}`,
         values
       );
 

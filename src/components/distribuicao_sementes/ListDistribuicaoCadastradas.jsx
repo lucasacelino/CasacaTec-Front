@@ -11,13 +11,13 @@ const ListDistribuicaoCadastradas = () => {
   const [idDistribuicao, setIdDistribuicao] = useState(null);
   const [distribuicoesAgendadas, setDistribuicoesAgendadas] = useState([]);
 
-  const carregarAtividades = async () => {
-    const response = await axios.get("http://localhost:3000/distr");
+  const carregarDistribuicoes = async () => {
+    const response = await axios.get("http://localhost:8080/distriSementes");
     setDistribuicoesAgendadas(response.data);
   };
 
   useEffect(() => {
-    carregarAtividades();
+    carregarDistribuicoes();
   }, []);
 
   const handleAtividade = (atividadeAtualizada) => {
@@ -32,7 +32,7 @@ const ListDistribuicaoCadastradas = () => {
 
   const handleExcluirAtividade = async () => {
     try {
-      await axios.delete(`http://localhost:3000/distr/${idDistribuicao}`);
+      await axios.delete(`http://localhost:8080/distriSementes/deletarDistribuicao/${idDistribuicao}`);
       setDistribuicoesAgendadas(
         distribuicoesAgendadas.filter(
           (atividade) => atividade.id !== idDistribuicao
@@ -70,7 +70,7 @@ const ListDistribuicaoCadastradas = () => {
 
   const atualizarStatusNoBackend = async (id, novoStatus) => {
     try {
-      const response = await axios.patch(`http://localhost:3000/distr/${id}`, {
+      const response = await axios.patch(`http://localhost:8080/distriSementes/${id}`, {
         statusEntrega: novoStatus,
       });
 

@@ -12,13 +12,13 @@ import { maskTelefone } from "../../produtores/utils/mascarasInputs";
 
 const CadastroTecnicoModal = ({ isOpen, onClose, onSave }) => {
   const initialValues = {
-    nomeCompleto: "",
-    email: "",
-    telefone: "",
+    nomeTecnico: "",
+    emailTecnico: "",
+    telefoneTecnico: "",
   };
 
   const validationSchema = Yup.object({
-    nomeCompleto: Yup.string()
+    nomeTecnico: Yup.string()
       .required("Local de limpeza é obrigatório")
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
       .test(
@@ -36,30 +36,35 @@ const CadastroTecnicoModal = ({ isOpen, onClose, onSave }) => {
     //     (value) => (value ? value.trim() === value : true)
     //   )
 
-    email: Yup.string()
+    emailTecnico: Yup.string()
       .required("material de limpeza é obrigatório")
       .email("email inválido"),
-    telefone: Yup.string()
+    telefoneTecnico: Yup.string()
       .required("Telefone é obrigatório")
       .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
   });
 
   const handleTelefoneChange = (e, setFieldValue) => {
     const formattedValue = maskTelefone(e.target.value);
-    setFieldValue("telefone", formattedValue);
+    setFieldValue("telefoneTecnico", formattedValue);
   };
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
       const dadosEnvio = {
-        nomeCompleto: values.nomeCompleto,
-        email: values.email,
-        telefone: values.telefone,
+        nomeTecnico: values.nomeTecnico,
+        emailTecnico: values.emailTecnico,
+        telefoneTecnico: values.telefoneTecnico,
       };
 
       // Chamada para a API
+      // const response = await axios.post(
+      //   "http://localhost:3000/tecnicos",
+      //   dadosEnvio
+      // );
+
       const response = await axios.post(
-        "http://localhost:3000/tecnicos",
+        "http://localhost:8080/tecnicos/tecnico",
         dadosEnvio
       );
 
@@ -96,18 +101,18 @@ const CadastroTecnicoModal = ({ isOpen, onClose, onSave }) => {
               <Form className="grid grid-cols-2 gap-4 mt-4">
                 <div>
                   <label
-                    htmlFor="nomeCompleto"
+                    htmlFor="nomeTecnico"
                     className="block text-sm font-medium text-black"
                   >
                     Nome Completo*
                   </label>
                   <Field
-                    name="nomeCompleto"
+                    name="nomeTecnico"
                     type="text"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                   />
                   <ErrorMessage
-                    name="nomeCompleto"
+                    name="nomeTecnico"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
@@ -115,18 +120,18 @@ const CadastroTecnicoModal = ({ isOpen, onClose, onSave }) => {
 
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="emailTecnico"
                     className="block text-sm font-medium text-black"
                   >
                     Email*
                   </label>
                   <Field
-                    name="email"
+                    name="emailTecnico"
                     type="text"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                   />
                   <ErrorMessage
-                    name="email"
+                    name="emailTecnico"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
@@ -134,19 +139,19 @@ const CadastroTecnicoModal = ({ isOpen, onClose, onSave }) => {
 
                 <div>
                   <label
-                    htmlFor="telefone"
+                    htmlFor="telefoneTecnico"
                     className="block text-sm font-medium text-black"
                   >
                     Telefone*
                   </label>
                   <Field
-                    name="telefone"
+                    name="telefoneTecnico"
                     type="text"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                     onChange={(e) => handleTelefoneChange(e, setFieldValue)}
                   />
                   <ErrorMessage
-                    name="telefone"
+                    name="telefoneTecnico"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />

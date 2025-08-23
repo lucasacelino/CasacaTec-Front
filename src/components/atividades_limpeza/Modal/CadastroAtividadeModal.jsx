@@ -15,7 +15,7 @@ const CadastroAtividadeModal = ({ isOpen, onClose, onSave }) => {
     materialLimpeza: "",
     responsavelLimpeza: "",
     fiscalLimpeza: "",
-    dataLimpeza: "",
+    // dataLimpeza: "",
     observacao: "",
   };
 
@@ -56,15 +56,15 @@ const CadastroAtividadeModal = ({ isOpen, onClose, onSave }) => {
         (value) => (value ? value.trim() === value : true)
       )
       .min(2, "O nome deve ter pelo menos 2 letras"),
-    dataLimpeza: Yup.date()
-      .required("Data de limpeza é obrigatória")
-      .max(new Date(), "Data não pode ser no futuro")
-      .test("ano-valido", "Ano inválido", (value) => {
-        const ano = value.getFullYear();
-        const anoString = value.getFullYear().toString();
-        const anoAtual = new Date().getFullYear();
-        return anoString.length === 4 && ano > 1920 && ano <= anoAtual;
-      }),
+    // dataLimpeza: Yup.date()
+    //   .required("Data de limpeza é obrigatória")
+    //   .max(new Date(), "Data não pode ser no futuro")
+    //   .test("ano-valido", "Ano inválido", (value) => {
+    //     const ano = value.getFullYear();
+    //     const anoString = value.getFullYear().toString();
+    //     const anoAtual = new Date().getFullYear();
+    //     return anoString.length === 4 && ano > 1920 && ano <= anoAtual;
+    //   }),
     observacao: Yup.string()
       .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
       .test(
@@ -77,17 +77,20 @@ const CadastroAtividadeModal = ({ isOpen, onClose, onSave }) => {
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
-      const [anoNasc, mesNasc, diaNasc] = values.dataLimpeza.split("-");
-      const dataNascFormatada = `${diaNasc}/${mesNasc}/${anoNasc}`;
+      // const [anoNasc, mesNasc, diaNasc] = values.dataLimpeza.split("-");
+      // const dataNascFormatada = `${diaNasc}/${mesNasc}/${anoNasc}`;
+
+      // const dadosEnvio = {
+      //   ...values,
+      //   dataLimpeza: dataNascFormatada,
+      // };
 
       const dadosEnvio = {
-        ...values,
-        dataLimpeza: dataNascFormatada,
-      };
+        ...values
+      }
 
-      // Chamada para a API
       const response = await axios.post(
-        "http://localhost:3000/atvs_limpeza",
+        "http://localhost:8080/limpezas/limpeza",
         dadosEnvio
       );
 
@@ -198,7 +201,7 @@ const CadastroAtividadeModal = ({ isOpen, onClose, onSave }) => {
                   />
                 </div>
 
-                <div>
+                {/* <div>
                   <label
                     htmlFor="dataLimpeza"
                     className="block text-sm font-medium text-black"
@@ -215,7 +218,7 @@ const CadastroAtividadeModal = ({ isOpen, onClose, onSave }) => {
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
-                </div>
+                </div> */}
 
                 <div className="col-span-2">
                   <label

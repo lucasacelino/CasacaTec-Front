@@ -11,6 +11,7 @@ import CadastrarAtividadeLimpeza from "../pages/CadastrarAtividadeLimpeza";
 import ListAtividadesLimpezaCadastradas from "../pages/Usina/ListAtividadesLimpezaCadastradas";
 import ListDistribuicao from "../pages/DistribuicaoSementes/ListDistribuicao";
 import ListTecnicosCadastados from "../pages/Tecnicos/ListTecnicosCadastados";
+import ColheitasEntreguesPage from "../pages/Usina/ColheitasEntreguesPage";
 
 const AppRoutes = () => {
   return (
@@ -32,6 +33,10 @@ const AppRoutes = () => {
               <Route
                 path="atividadescadastradas"
                 element={<ListAtividadesLimpezaCadastradas />}
+              />
+              <Route
+                path="colheitas-entregue"
+                element={<ColheitasEntreguesPage />}
               />
             </Route>
 

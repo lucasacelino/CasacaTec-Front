@@ -2,11 +2,11 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const ModalDeleteTecnico = ({ tecnicoId, isOpen, onClose, onSuccess }) => {
+const ModalDeleteTecnico = ({ id, isOpen, onClose, onSuccess }) => {
   const handleDeleteTecnico = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/tecnicos/${tecnicoId}`
+        `http://localhost:8080/tecnicos/deletarTecnico/${id}`
       );
       console.log("Produtor excluido!", response);
       onSuccess();

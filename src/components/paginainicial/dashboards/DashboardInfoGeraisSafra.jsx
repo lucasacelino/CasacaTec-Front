@@ -4,6 +4,7 @@ import produtor from "../../../assets/SVGs/produtor.svg";
 import fazenda from "../../../assets/SVGs/fazenda.svg";
 import semente from "../../../assets/SVGs/semente.svg";
 import algodao from "../../../assets/SVGs/algodao.svg";
+import colheita from "../../../assets/SVGs/colheita.svg";
 
 import axios from "axios";
 
@@ -13,7 +14,7 @@ const DashboardInfoGeraisSafra = () => {
 
   useEffect(() => {
     const fetchProdutores = async () => {
-      const response = await axios.get("http://localhost:3000/produtores");
+      const response = await axios.get("http://localhost:5000/produtores");
       const totalProdutores = response.data.length;
       setQtdProdutores(totalProdutores);
 
@@ -45,6 +46,12 @@ const DashboardInfoGeraisSafra = () => {
       titulo: "Hectares plantados",
       valor: 0,
       icon: algodao,
+    },
+
+    {
+      titulo: "Colheitas Entregues",
+      valor: 0,
+      icon: colheita,
     },
   ];
 

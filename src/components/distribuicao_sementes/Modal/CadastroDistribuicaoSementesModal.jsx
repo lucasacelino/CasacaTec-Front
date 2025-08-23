@@ -26,12 +26,12 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
 
   const initialValues = {
     nomeCondutor: "",
-    telefoneCondutor: "",
+    telefone: "",
     nomeTecnico: "",
     estado: "",
-    cidade: "",
-    horarioPrevisto: "",
-    quantidadeSacos: "",
+    municipio: "",
+    horario: "",
+    qtdSacos: "",
     dataEntrega: "",
     observacao: "",
   };
@@ -136,7 +136,7 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
       };
 
       const response = await axios.post(
-        "http://localhost:3000/distr",
+        "http://localhost:8080/distriSementes",
         dadosEnvio
       );
 

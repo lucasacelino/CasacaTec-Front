@@ -34,9 +34,9 @@ const CadastroProdutoresForm = () => {
     telefone: "",
     fidelizacao: "",
     endereco: "",
-    uf: "",
-    nomeMunicipio: "",
-    nomeRegional: "",
+    estado: "",
+    municipio: "",
+    regional: "",
   };
 
   const validationSchema = Yup.object({
@@ -119,8 +119,8 @@ const CadastroProdutoresForm = () => {
         }
       )
       .min(2, "O nome deve ter pelo menos 2 letras"),
-    uf: Yup.string().required("Estado é obrigatório"),
-    nomeMunicipio: Yup.string().required("Cidade é obrigatório"),
+    estado: Yup.string().required("Estado é obrigatório"),
+    municipio: Yup.string().required("Cidade é obrigatório"),
   });
 
   const handleCPFChange = (e, setFieldValue) => {
@@ -149,18 +149,19 @@ const CadastroProdutoresForm = () => {
       telefone: values.telefone,
       fidelizacao: dte,
       endereco: values.endereco,
-      nomeMunicipio: values.nomeMunicipio,
-      uf: values.uf,
-      nomeRegional: values.nomeRegional,
+      municipio: values.municipio,
+      estado: values.estado,
+      regional: values.regional
     };
 
     console.log("Dados que serão enviados:", dadosEnvio);
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/produtores",
+        "http://localhost:8080/produtores/produtor",
         dadosEnvio
       );
+      
       console.log("Produtor cadastrado com sucesso!");
       resetForm();
       setOpenDialog(true);
@@ -337,19 +338,19 @@ const CadastroProdutoresForm = () => {
               {/* Estado */}
               <div>
                 <label
-                  htmlFor="uf"
+                  htmlFor="estado"
                   className="block text-sm font-medium text-black"
                 >
                   Estado*
                 </label>
                 <Field
                   as="select"
-                  name="uf"
+                  name="estado"
                   className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                   onChange={async (e) => {
                     const sigla = e.target.value;
-                    setFieldValue("uf", sigla);
-                    setFieldValue("nomeMunicipio", "");
+                    setFieldValue("estado", sigla);
+                    setFieldValue("municipio", "");
                     if (sigla) {
                       const cidades = await fetchCitiesByState(sigla);
                       setCidades(cidades);
@@ -366,7 +367,7 @@ const CadastroProdutoresForm = () => {
                   ))}
                 </Field>
                 <ErrorMessage
-                  name="uf"
+                  name="estado"
                   component="div"
                   className="text-red-500 text-xs mt-1"
                 />
@@ -375,14 +376,14 @@ const CadastroProdutoresForm = () => {
               {/* Cidade */}
               <div>
                 <label
-                  htmlFor="nomeMunicipio"
+                  htmlFor="municipio"
                   className="block text-sm font-medium text-black"
                 >
                   Cidade*
                 </label>
                 <Field
                   as="select"
-                  name="nomeMunicipio"
+                  name="municipio"
                   className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                 >
                   <option value="">Selecione a cidade</option>
@@ -393,7 +394,7 @@ const CadastroProdutoresForm = () => {
                   ))}
                 </Field>
                 <ErrorMessage
-                  name="nomeMunicipio"
+                  name="municipio"
                   component="div"
                   className="text-red-500 text-xs mt-1"
                 />
@@ -402,14 +403,14 @@ const CadastroProdutoresForm = () => {
               {/* Regional */}
               <div>
                 <label
-                  htmlFor="nomeRegional"
+                  htmlFor="regional"
                   className="block text-sm font-medium text-black"
                 >
                   Regional*
                 </label>
                 <Field
                   as="select"
-                  name="nomeRegional"
+                  name="regional"
                   className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                 >
                   <option value="">Selecione a regional</option>
@@ -420,7 +421,7 @@ const CadastroProdutoresForm = () => {
                   ))}
                 </Field>
                 <ErrorMessage
-                  name="nomeRegional"
+                  name="regional"
                   component="div"
                   className="text-red-500 text-xs mt-1"
                 />
