@@ -16,7 +16,7 @@ function NotaFiscalProdutorModalPage({ produtorId, isOpen, onClose }) {
   useEffect(() => {
     const responseDadosProdutor = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/produtores/${produtorId}`);
+        const response = await axios.get(`http://localhost:8080//${produtorId}`);
         setDadosProdutor(response.data.nomeCompleto);
       } catch (error) {
         console.error(error)

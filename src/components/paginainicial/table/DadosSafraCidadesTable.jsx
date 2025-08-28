@@ -22,7 +22,7 @@ const DadosSafraCidadesTable = ({ data }) => {
             <tbody>
               {data.map((datas) => (
                 <tr
-                  key={`${datas.id}-${datas.nome_cidade}`}
+                  key={`${datas.idProdutor}-${datas.municipio}`}
                   className="hover:bg-gray-50"
                 >
                   <td className="underline py-2 px-4 border-b border-gray-400 font-medium">
@@ -31,7 +31,7 @@ const DadosSafraCidadesTable = ({ data }) => {
                         onClick={() => setIsOpenModal(true)}
                         className="flex items-center"
                       >
-                        <p>{datas.nomeMunicipio}</p>
+                        <p>{datas.municipio}</p>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="1em"

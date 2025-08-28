@@ -5,12 +5,12 @@ import { useState } from "react";
 import ModalLogout from "./Modal/ModaLogout";
 
 const HeaderLogin = () => {
-  const { user, isAuthenticated } = useAuth(); 
+  const { user, isAuthenticated } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <header className="bg-[#F9F8F4] border-b-2 border-[#FF6B00] py-2 px-2 sticky top-0 z-50 h-16">
+      <header className="bg-[#FFFFFF] border-b-2 border-[#FF6B00] py-2 px-2 sticky top-0 z-50 h-16">
         <div className="ml-3 flex items-center justify-between h-full">
           <NavLink to="/">
             <div className="flex items-center">

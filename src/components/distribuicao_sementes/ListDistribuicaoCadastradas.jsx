@@ -14,6 +14,7 @@ const ListDistribuicaoCadastradas = () => {
   const carregarDistribuicoes = async () => {
     const response = await axios.get("http://localhost:8080/distriSementes");
     setDistribuicoesAgendadas(response.data);
+    console.log(response.data);
   };
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const ListDistribuicaoCadastradas = () => {
   const handleAtividade = (atividadeAtualizada) => {
     setDistribuicoesAgendadas(
       distribuicoesAgendadas.map((atividade) =>
-        atividade.id === atividadeAtualizada.id
+        atividade.idDistribuicao === atividadeAtualizada.idDistribuicao
           ? atividadeAtualizada
           : atividade
       )
@@ -32,10 +33,12 @@ const ListDistribuicaoCadastradas = () => {
 
   const handleExcluirAtividade = async () => {
     try {
-      await axios.delete(`http://localhost:8080/distriSementes/deletarDistribuicao/${idDistribuicao}`);
+      await axios.delete(
+        `http://localhost:8080/distriSementes/deletarDistribuicao/${idDistribuicao}`
+      );
       setDistribuicoesAgendadas(
         distribuicoesAgendadas.filter(
-          (atividade) => atividade.id !== idDistribuicao
+          (atividade) => atividade.idDistribuicao !== idDistribuicao
         )
       );
       toast("Atividade de limpeza excluída com sucesso!", {
@@ -68,21 +71,58 @@ const ListDistribuicaoCadastradas = () => {
     }
   };
 
+  // const atualizarStatusNoBackend = async (id, novoStatus) => {
+  //   try {
+  //     const response = await axios.patch(`http://localhost:8080/distriSementes/${id}/status`, {
+  //       status: novoStatus,
+  //     });
+
+  //     setDistribuicoesAgendadas(
+  //       distribuicoesAgendadas.map((distribuicao) =>
+  //         distribuicao.idDistribuicao === id ? { ...distribuicao, status: novoStatus } : distribuicao
+  //       )
+  //     );
+
+  //     console.log("Atualizado com sucesso:", response.data);
+  //   } catch (error) {
+  //     console.error("Erro ao atualizar:", error);
+  //     alert("Falha ao atualizar o status!");
+  //   }
+  // };
+
   const atualizarStatusNoBackend = async (id, novoStatus) => {
     try {
-      const response = await axios.patch(`http://localhost:8080/distriSementes/${id}`, {
-        statusEntrega: novoStatus,
-      });
+      console.log("=== DEBUG FRONTEND ===");
+      console.log("ID enviado:", id);
+      console.log("Status enviado:", novoStatus);
+      console.log("URL:", `http://localhost:8080/distriSementes/${id}/status`);
+      console.log("Payload:", { status: novoStatus });
+
+      const response = await axios.patch(
+        `http://localhost:8080/distriSementes/${id}/status`,
+        {
+          status: novoStatus,
+        }
+      );
+
+      console.log("Response completa:", response);
+      console.log("Response data:", response.data);
+      console.log("Status da response:", response.status);
 
       setDistribuicoesAgendadas(
-        distribuicoesAgendadas.map((pedido) =>
-          pedido.id === id ? { ...pedido, statusEntrega: novoStatus } : pedido
+        distribuicoesAgendadas.map((distribuicao) =>
+          distribuicao.idDistribuicao === id
+            ? { ...distribuicao, status: novoStatus }
+            : distribuicao
         )
       );
 
-      console.log("Atualizado com sucesso:", response.data);
+      console.log("Estado atualizado no frontend");
     } catch (error) {
-      console.error("Erro ao atualizar:", error);
+      console.error("=== ERRO COMPLETO ===");
+      console.error("Error object:", error);
+      console.error("Response error:", error.response?.data);
+      console.error("Status error:", error.response?.status);
       alert("Falha ao atualizar o status!");
     }
   };
@@ -93,8 +133,8 @@ const ListDistribuicaoCadastradas = () => {
     // Atualização otimista (opcional)
     setDistribuicoesAgendadas(
       distribuicoesAgendadas.map((distribuicoes) =>
-        distribuicoes.id === id
-          ? { ...distribuicoes, statusEntrega: novoStatus }
+        distribuicoes.idDistribuicao === id
+          ? { ...distribuicoes, status: novoStatus }
           : distribuicoes
       )
     );
@@ -131,9 +171,9 @@ const ListDistribuicaoCadastradas = () => {
                 <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left">
                   Cidade
                 </th>
-                <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left whitespace-nowrap">
+                {/* <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left whitespace-nowrap">
                   Nome Técnico
-                </th>
+                </th> */}
                 <th className="text-[#000000] py-2 px-4 border-b border-gray-200 text-left whitespace-nowrap">
                   Horário previsto
                 </th>
@@ -156,27 +196,27 @@ const ListDistribuicaoCadastradas = () => {
             </thead>
             <tbody>
               {distribuicoesAgendadas.map((dados) => (
-                <tr key={dados.id}>
+                <tr key={dados.idDistribuicao}>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
                     {dados.nomeCondutor}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
-                    {dados.telefoneCondutor}
+                    {dados.telefone}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
                     {dados.estado}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium whitespace-nowrap">
-                    {dados.cidade}
+                    {dados.municipio}
                   </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
+                  {/* <td className="py-2 px-4 border-b border-gray-400 font-medium">
                     {dados.nomeTecnico}
+                  </td> */}
+                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
+                    {dados.horario}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-400 font-medium">
-                    {dados.horarioPrevisto}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-400 font-medium">
-                    {dados.quantidadeSacos}
+                    {dados.qtdSacos}
                   </td>
                   <td className="py-2 px-4 font-medium border-b border-gray-400 max-w-xs break-words">
                     {dados.dataEntrega}
@@ -188,24 +228,24 @@ const ListDistribuicaoCadastradas = () => {
                     <div className="flex flex-row gap-2">
                       <span
                         className={`rounded-sm px-2 py-2 ${
-                          dados.statusEntrega === "Pendente"
+                          dados.status === "Pendente"
                             ? "bg-[#f79d65] text-[#780000]"
                             : "bg-[#74c69d] text-[#081c15]"
                         }`}
                       >
-                        {dados.statusEntrega}
+                        {dados.status}
                       </span>
 
                       <div className="flex items-center gap-1">
-                        {dados.statusEntrega === "Pendente" ? (
+                        {dados.status === "Pendente" ? (
                           <>
                             <input
                               type="checkbox"
-                              checked={dados.statusEntrega === "Entregue"}
+                              checked={dados.status === "Entregue"}
                               // onChange={() => toggleStatusEntrega(dados.id)}
                               onChange={(e) => {
                                 // setIdDistribuicao(dados.id);
-                                handleCheckboxChange(e, dados.id);
+                                handleCheckboxChange(e, dados.idDistribuicao);
                                 // toggleStatusEntrega(dados.id);
                               }}
                             />
@@ -225,7 +265,7 @@ const ListDistribuicaoCadastradas = () => {
                       <button
                         onClick={() => {
                           setIsOpenEdit(true);
-                          setIdDistribuicao(dados.id);
+                          setIdDistribuicao(dados.idDistribuicao);
                         }}
                         className="flex items-center p-2 text-[#000000]border-black font-medium rounded-sm transition-colors duration-200 hover:text-blue-800 border border-gray-400"
                         title="Editar"
@@ -237,7 +277,7 @@ const ListDistribuicaoCadastradas = () => {
                           viewBox="0 0 24 24"
                         >
                           <path
-                            fill="#FF6B00"
+                            fill="#000000"
                             d="M4.42 20.579a1 1 0 0 1-.737-.326a.988.988 0 0 1-.263-.764l.245-2.694L14.983 5.481l3.537 3.536L7.205 20.33l-2.694.245a.95.95 0 0 1-.091.004ZM19.226 8.31L15.69 4.774l2.121-2.121a1 1 0 0 1 1.415 0l2.121 2.121a1 1 0 0 1 0 1.415l-2.12 2.12l-.001.001Z"
                           />
                         </svg>
@@ -246,7 +286,7 @@ const ListDistribuicaoCadastradas = () => {
                       <button
                         onClick={() => {
                           setModalIsOpen(true);
-                          setIdDistribuicao(dados.id);
+                          setIdDistribuicao(dados.idDistribuicao);
                         }}
                         className="p-2 flex items-center font-medium text-[#000000] rounded-sm transition-colors duration-200 hover:text-red-800 border border-gray-400"
                         title="Excluir"

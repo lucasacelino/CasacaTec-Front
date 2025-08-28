@@ -2,16 +2,13 @@ import { useState } from "react";
 import ModalExcluirProducao from "./ModalExcluirProducao";
 import FormEditProducao from "../Forms/FormEditProducao";
 
-const CardInfoProducao = ({ dadosProducao, onAtualizarDados }) => {
+const CardInfoProducao = ({ dadosProducao = [], onAtualizarDados }) => {
   const [producaoId, setIdProducao] = useState(null);
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isOpenFormlEdit, setOpenFormEdit] = useState(false);
 
+  console.log(dadosProducao);
   const anoAtual = new Date().getFullYear();
-
-  // const handleExcluirProducao = () => {
-  //   onAtualizarDados();
-  // };
 
   return (
     <>
@@ -25,7 +22,10 @@ const CardInfoProducao = ({ dadosProducao, onAtualizarDados }) => {
         <div>
           <p className="font-bold text-lg">Dados produção - {anoAtual}</p>
           {dadosProducao.map((dado) => (
-            <div key={dado.id} className="mb-2 border border-[#343a40] rounded-sm">
+            <div
+              key={dado.idProducao}
+              className="mb-2 border border-[#343a40] rounded-sm"
+            >
               <div className="flex flex-wrap gap-4 px-3 py-2">
                 <div className="flex gap-1 border-b border-[#ff6500]">
                   <span className="font-bold">Arranjo Produtivo:</span>
@@ -47,10 +47,15 @@ const CardInfoProducao = ({ dadosProducao, onAtualizarDados }) => {
                   <span className="font-medium">{dado.dataPlantio}</span>
                 </div>
 
+                <div className="flex gap-1 border-b border-[#ff6500]">
+                  <span className="font-bold">Técnico:</span>
+                  <span className="font-medium">{dado.tecnico.nomeTec}</span>
+                </div>
+
                 <div className="w-full flex items-center justify-center gap-2">
                   <button
                     onClick={() => {
-                      setIdProducao(dado.id);
+                      setIdProducao(dado.idProducao);
                       setOpenFormEdit(true);
                     }}
                     className="bg-[#000000] text-white font-medium rounded-sm px-2 py-2 flex items-center gap-1"
@@ -70,7 +75,7 @@ const CardInfoProducao = ({ dadosProducao, onAtualizarDados }) => {
                   </button>
                   <button
                     onClick={() => {
-                      setIdProducao(dado.id);
+                      setIdProducao(dado.idProducao);
                       setIsOpenModalDelete(true);
                     }}
                     className="bg-[#000000] text-white font-medium rounded-sm px-2 py-2 flex items-center gap-1"

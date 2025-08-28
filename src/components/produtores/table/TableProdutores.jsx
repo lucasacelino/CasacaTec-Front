@@ -98,7 +98,7 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
                       <button
                         onClick={() => {
                           setProducaoOpen(true);
-                          setProdutorId(dado.id);
+                          setProdutorId(dado.idProdutor);
                         }}
                         className="flex items-center border border-gray-400 p-2 rounded-sm"
                       >
@@ -148,7 +148,7 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
                       <button
                         onClick={() => {
                           setIsEditOpen(true);
-                          setProdutorId(dado.id);
+                          setProdutorId(dado.idProdutor);
                         }}
                         className="flex items-center p-2 text-[#000000]border-black font-medium rounded-sm transition-colors duration-200 hover:text-blue-800 border border-gray-400"
                         title="Editar"
@@ -170,7 +170,7 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
                       <button
                         onClick={() => {
                           setIsDeletOpen(true);
-                          setProdutorId(dado.id);
+                          setProdutorId(dado.idProdutor);
                         }}
                         className="p-2 flex items-center font-medium text-[#000000] rounded-sm transition-colors duration-200 hover:text-red-800 border border-gray-400"
                         title="Excluir"

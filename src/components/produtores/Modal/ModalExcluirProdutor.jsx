@@ -7,7 +7,7 @@ const ModalExcluirProdutor = ({ produtorId, isOpen, onClose, onProdutorAtualizad
   const handleExcluirProdutor = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/produtores/${produtorId}`
+        `http://localhost:8080/produtores/deletarProdutor/${produtorId}`
       );
 
       console.log("Produtor excluido!", response);

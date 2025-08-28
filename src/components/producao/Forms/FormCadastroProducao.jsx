@@ -1,20 +1,37 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { formatarPesoBR } from "../../produtores/utils/mascarasInputs";
+// import { formatarPesoBR } from "../../produtores/utils/mascarasInputs";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
+  const [dadosTecnicos, setDadosTecnicos] = useState([]);
+
+  const carregarDadosTecnico = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/tecnicos");
+      setDadosTecnicos(response.data);
+    } catch (error) {
+      console.log(error)
+      toast.error("Erro ao carregar dados")
+    }
+  };
+
+  useEffect(() => {
+    carregarDadosTecnico();
+  }, []);
+
   const validationSchema = Yup.object({
     arranjoProdutivo: Yup.string()
       .required("Arranjo produtivo é obrigatório")
-      .test(
-        "no-trailing-spaces",
-        "Nome completo não pode ter espaços no início ou fim",
-        (value) => {
-          return value ? value.trim() === value : true;
-        }
-      )
+      // .test(
+      //   "no-trailing-spaces",
+      //   "Nome completo não pode ter espaços no início ou fim",
+      //   (value) => {
+      //     return value ? value.trim() === value : true;
+      //   }
+      // )
       .min(2, "O nome deve ter pelo menos 2 letras"),
     culturaConsorcio: Yup.string()
       // .required("A cultura do consórcio é obrigatória")
@@ -70,6 +87,7 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
           return data.getFullYear() === anoAtual;
         }
       ),
+      tecnico: Yup.string().required("Estado é obrigatório")
   });
 
   const initialValues = {
@@ -77,31 +95,24 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
     culturaConsorcio: "",
     areaPlantio: "",
     dataPlantio: "",
+    tecnico: ""
   };
 
   const handleSubmit = async (values, { resetForm }) => {
     const [ano, mes, dia] = values.dataPlantio.split("-");
     const dataPlantio = `${dia}/${mes}/${ano}`;
 
-    const areaPlantio = parseFloat(
-      values.areaPlantio.replace(/\./g, "").replace(",", ".")
-    );
-
-    if (areaPlantio < 0) {
-      toast.error("Valor não pode ser negativo");
-      return;
-    }
-
     const dados = {
       arranjoProdutivo: values.arranjoProdutivo,
       culturaConsorcio: values.culturaConsorcio,
-      areaPlantio: areaPlantio,
+      areaPlantio: values.areaPlantio,
       dataPlantio: dataPlantio,
-      produtorId: produtorId,
+      idProdutor: produtorId,
+      idTecnico: values.tecnico
     };
 
     try {
-      const res = await axios.post("http://localhost:3000/producao", dados);
+      const res = await axios.post("http://localhost:8080/producoes/producao", dados);
       console.log(res.data);
       resetForm();
       onSuccess();
@@ -119,19 +130,19 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, setFieldValue }) => (
+        {({ values }) => (
           <Form className="grid grid-cols-2 gap-4">
             <div>
               <label
                 htmlFor="arranjoProdutivo"
                 className="block text-sm font-medium text-black"
               >
-                Arranjo produtivo
+                Arranjo produtivo*
               </label>
               <Field
                 name="arranjoProdutivo"
                 as="select"
-                className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                className="mt-1 block w-full border border-black rounded-md shadow-sm h-[43px] py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
               >
                 <option value="">Selecione um tipo de arranjo produtivo</option>
                 <option value="Consórcio">Consórcio</option>
@@ -174,18 +185,6 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
               <Field
                 name="areaPlantio"
                 type="text"
-                onChange={(e) => {
-                  setFieldValue("areaPlantio", e.target.value);
-                }}
-                onBlur={(e) => {
-                  const valorFormatado = formatarPesoBR(e.target.value);
-                  setFieldValue("areaPlantio", valorFormatado);
-                }}
-                onKeyPress={(e) => {
-                  if (!/[0-9,.]|Backspace|Delete|Arrow/.test(e.key)) {
-                    e.preventDefault();
-                  }
-                }}
                 className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
               />
               <ErrorMessage
@@ -200,7 +199,7 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
                 htmlFor="dataPlantio"
                 className="block text-sm font-medium text-black"
               >
-                Data do plantio
+                Data do plantio*
               </label>
               <Field
                 name="dataPlantio"
@@ -214,6 +213,34 @@ const FormCadastroProducao = ({ produtorId, onClose, onSuccess }) => {
                 className="text-red-500 text-xs mt-1"
               />
             </div>
+
+            <div>
+              <label
+                htmlFor="tecnico"
+                className="block text-sm font-medium text-black"
+              >
+                Técnico*
+              </label>
+              <Field
+                name="tecnico"
+                as="select"
+                className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
+                maxLength="4"
+              >
+                <option value="">Selecione um técnico</option>
+                  {dadosTecnicos.map((tecnico) => (
+                    <option key={tecnico.idTecnico} value={tecnico.idTecnico}>
+                      {tecnico.nomeTecnico}
+                    </option>
+                  ))}
+              </Field>
+              <ErrorMessage
+                name="tecnico"
+                component="div"
+                className="text-red-500 text-xs mt-1"
+              />
+            </div>
+
             <div className="col-span-2 flex justify-center gap-2 pt-2">
               <button
                 onClick={onClose}

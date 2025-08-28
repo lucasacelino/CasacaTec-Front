@@ -1,49 +1,99 @@
-import { Dialog, DialogPanel } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
+
+import { Dialog, DialogPanel } from "@headlessui/react";
 import FormCadastroProducao from "../Forms/FormCadastroProducao";
 import CardInfoProducao from "./CardInfoProducao";
+
 import axios from "axios";
 
 const ProducaoModalPage = ({ produtorId, isOpen, onClose }) => {
   const [isOpenCadProducao, setOpenCadProducao] = useState(false);
   const [dadosProducao, setDadosProducao] = useState([]);
+  // const [nomeProdutor, setNomeProdutor] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   
   const anoAtual = new Date().getFullYear();
 
   const recarregarDados = async () => {
+    if (!produtorId) {
+      console.log("❌ produtorId não existe, cancelando requisição");
+      return;
+    }
+    
+    setLoading(true);
+    setError(null);
+    
     try {
-      const response = await axios.get(
-        `http://localhost:3000/producao?produtorId=${produtorId}`
-      );
-      setDadosProducao(response.data);
+      const url = `http://localhost:8080/producoes/produtor/${produtorId}`;
+      const response = await axios.get(url);
+      // setNomeProdutor(response.data[0].produtor.nomeCompleto);
+      console.log("📦 Dados recebidos:", response.data);
+      
+      setDadosProducao(response.data || []);
+      
     } catch (error) {
-      console.error(error);
+      console.error("❌ Erro na requisição:", error);
+      console.error("Status do erro:", error.response?.status);
+      console.error("Dados do erro:", error.response?.data);
+      setError(error.message);
+      setDadosProducao([]);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    recarregarDados();
-  }, [produtorId]);
-
+    if (isOpen && produtorId) {
+      recarregarDados();
+    }
+  }, [produtorId, isOpen]);
 
   const handleProducaoCadastrada = () => {
+    console.log("🆕 Nova produção cadastrada, recarregando dados...");
+    setOpenCadProducao(false);
     recarregarDados();
   };
 
+  const handleCloseModal = () => {
+    setOpenCadProducao(false);
+    setError(null);
+    onClose();
+  };
+
+  if (!isOpen) {
+    return null;
+  }
+
   return (
-    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
+    <Dialog open={isOpen} onClose={handleCloseModal} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel className="rounded-xl w-full max-w-[60vw] max-h-[90vh] flex flex-col bg-white border border-gray-200 shadow-lg">
-          <h1 className="p-4 text-xl font-bold sticky top-0 border-b-2 border-[#ff6600]">
+          <h1 className="p-2 text-xl font-bold sticky top-0 border-b-2 border-[#ff6600]">
+            {/* Produção - {nomeProdutor} */}
             Produção
           </h1>
 
           <div className="flex-1 overflow-y-auto px-2 py-2">
-            {dadosProducao.length === 0 ? (
+            {loading ? (
+              <div className="text-center py-4">
+                <p>Carregando produções...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-4 text-red-600">
+                <p>Erro ao carregar dados: {error}</p>
+                <button 
+                  onClick={recarregarDados}
+                  className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-sm"
+                >
+                  Tentar novamente
+                </button>
+              </div>
+            ) : dadosProducao.length === 0 ? (
               <>
-                <p className="text-center py-4">
+                <p className="font-bold text-lg text-center py-4">
                   A produção de {anoAtual} ainda não foi criada
                 </p>
                 <div className="w-full flex items-center justify-center">
@@ -86,7 +136,7 @@ const ProducaoModalPage = ({ produtorId, isOpen, onClose }) => {
             ) : (
               <CardInfoProducao
                 dadosProducao={dadosProducao}
-                onAtualizarDados={handleProducaoCadastrada}
+                onAtualizarDados={recarregarDados}
               />
             )}
           </div>

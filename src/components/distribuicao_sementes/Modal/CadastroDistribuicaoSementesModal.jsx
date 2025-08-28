@@ -27,11 +27,12 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
   const initialValues = {
     nomeCondutor: "",
     telefone: "",
-    nomeTecnico: "",
     estado: "",
     municipio: "",
     horario: "",
     qtdSacos: "",
+    // estado: "",
+    // municipio: "",
     dataEntrega: "",
     observacao: "",
   };
@@ -47,22 +48,22 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
       )
       .min(2, "O nome deve ter pelo menos 2 letras"),
 
-    telefoneCondutor: Yup.string()
+    telefone: Yup.string()
       .required("Telefone é obrigatório")
       .matches(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Telefone inválido"),
     estado: Yup.string().required("Estado é obrigatório"),
-    cidade: Yup.string().required("Cidade é obrigatória"),
-    nomeTecnico: Yup.string()
-      .required("Nome do técnico é obrigatório")
-      .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
-      .test(
-        "no-trailing-spaces",
-        "Nome não pode ter espaços no início ou fim",
-        (value) => (value ? value.trim() === value : true)
-      )
-      .min(2, "O nome deve ter pelo menos 2 letras"),
-    horarioPrevisto: Yup.string().required("Horário previsto é obrigatório"),
-    quantidadeSacos: Yup.number()
+    municipio: Yup.string().required("Cidade é obrigatória"),
+    // nomeTecnic: Yup.string()
+    //   .required("Nome do técnico é obrigatório")
+    //   .matches(/^[A-Za-zÀ-ú\s]+$/, "O nome deve conter apenas letras")
+    //   .test(
+    //     "no-trailing-spaces",
+    //     "Nome não pode ter espaços no início ou fim",
+    //     (value) => (value ? value.trim() === value : true)
+    //   )
+    //   .min(2, "O nome deve ter pelo menos 2 letras"),
+    horario: Yup.string().required("Horário previsto é obrigatório"),
+    qtdSacos: Yup.number()
       .required("Quantidade de sacos é obrigatória")
       .positive("A quantidade deve ser positiva")
       .integer("A quantidade deve ser um número inteiro"),
@@ -103,14 +104,14 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
 
   const handleTelefoneChange = (e, setFieldValue) => {
     const formattedValue = maskTelefone(e.target.value);
-    setFieldValue("telefoneCondutor", formattedValue);
+    setFieldValue("telefone", formattedValue);
   };
 
   const handleEstadoChange = async (siglaEstado, setFieldValue) => {
     if (siglaEstado) {
       const response = await fetchCitiesByState(siglaEstado);
       setCidades(response);
-      setFieldValue("cidade", "");
+      setFieldValue("municipio", "");
     } else {
       setCidades([]);
     }
@@ -124,19 +125,19 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
     try {
       const dadosEnvio = {
         nomeCondutor: values.nomeCondutor,
-        telefoneCondutor: values.telefoneCondutor,
+        telefone: values.telefone,
         estado: values.estado,
-        cidade: values.cidade,
-        nomeTecnico: values.nomeTecnico,
-        horarioPrevisto: values.horarioPrevisto,
-        quantidadeSacos: values.quantidadeSacos,
+        municipio: values.municipio,
+        // nomeTecnico: values.nomeTecnico,
+        horario: values.horario,
+        qtdSacos: values.qtdSacos,
         dataEntrega: dataNascFormatada,
-        statusEntrega: "Pendente",
+        status: "Pendente",
         observacao: values.observacao,
       };
 
       const response = await axios.post(
-        "http://localhost:8080/distriSementes",
+        "http://localhost:8080/distriSementes/distribuicaoSementes",
         dadosEnvio
       );
 
@@ -191,20 +192,20 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
 
                 <div>
                   <label
-                    htmlFor="telefoneCondutor"
+                    htmlFor="telefone"
                     className="block text-sm font-medium text-black"
                   >
                     Telefone do Condutor*
                   </label>
                   <Field
-                    name="telefoneCondutor"
+                    name="telefone"
                     type="text"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                     onChange={(e) => handleTelefoneChange(e, setFieldValue)}
                     maxLength="15"
                   />
                   <ErrorMessage
-                    name="telefoneCondutor"
+                    name="telefone"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
@@ -241,13 +242,13 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
 
                 <div>
                   <label
-                    htmlFor="cidade"
+                    htmlFor="municipio"
                     className="block text-sm font-medium text-black"
                   >
                     Cidade*
                   </label>
                   <Field
-                    name="cidade"
+                    name="municipio"
                     as="select"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                   >
@@ -259,13 +260,13 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
                     ))}
                   </Field>
                   <ErrorMessage
-                    name="cidade"
+                    name="municipio"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
                 </div>
 
-                <div>
+                {/* <div>
                   <label
                     htmlFor="nomeTecnico"
                     className="block text-sm font-medium text-black"
@@ -282,23 +283,23 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
-                </div>
+                </div> */}
 
                 <div className="col-span-2 grid grid-cols-3 gap-4">
                   <div>
                     <label
-                      htmlFor="horarioPrevisto"
+                      htmlFor="horario"
                       className="block text-sm font-medium text-black"
                     >
                       Horário Previsto*
                     </label>
                     <Field
-                      name="horarioPrevisto"
+                      name="horario"
                       type="time"
                       className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                     />
                     <ErrorMessage
-                      name="horarioPrevisto"
+                      name="horario"
                       component="div"
                       className="text-red-500 text-xs mt-1"
                     />
@@ -306,19 +307,19 @@ const CadastroCondutorModal = ({ isOpen, onClose, onSave }) => {
 
                   <div>
                     <label
-                      htmlFor="quantidadeSacos"
+                      htmlFor="qtdSacos"
                       className="block text-sm font-medium text-black"
                     >
                       Quantidade de Sacos*
                     </label>
                     <Field
-                      name="quantidadeSacos"
+                      name="qtdSacos"
                       type="number"
                       min="1"
                       className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                     />
                     <ErrorMessage
-                      name="quantidadeSacos"
+                      name="qtdSacos"
                       component="div"
                       className="text-red-500 text-xs mt-1"
                     />

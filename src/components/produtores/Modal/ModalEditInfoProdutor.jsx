@@ -51,9 +51,9 @@ const ModalEditInfoProdutor = ({
     telefone: "",
     fidelizacao: "",
     endereco: "",
-    uf: "",
-    nomeMunicipio: "",
-    nomeRegional: "",
+    estado: "",
+    municipio: "",
+    regional: "",
   });
 
   useEffect(() => {
@@ -68,16 +68,16 @@ const ModalEditInfoProdutor = ({
 
   useEffect(() => {
     const loadCities = async () => {
-      if (initialValues.uf) {
-        const cidadesFetch = await fetchCitiesByState(initialValues.uf);
+      if (initialValues.estado) {
+        const cidadesFetch = await fetchCitiesByState(initialValues.estado);
         setCidades(cidadesFetch);
 
         // Atualiza o Formik com os valores iniciais
         if (formikRef.current) {
           formikRef.current.setValues({
             ...initialValues,
-            nomeMunicipio: initialValues.nomeMunicipio,
-            nomeRegional: initialValues.nomeRegional,
+            municipio: initialValues.municipio,
+            regional: initialValues.regional,
           });
         }
       }
@@ -86,7 +86,7 @@ const ModalEditInfoProdutor = ({
     if (isOpen && initialValues.uf) {
       loadCities();
     }
-  }, [initialValues.uf, isOpen]);
+  }, [initialValues.estado, isOpen]);
 
   useEffect(() => {
     if (!produtorId || !isOpen) return;
@@ -94,7 +94,7 @@ const ModalEditInfoProdutor = ({
     const fetchProdutor = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/produtores/${produtorId}`
+          `http://localhost:8080/produtores/${produtorId}`
         );
 
         const data = response.data;
@@ -108,14 +108,14 @@ const ModalEditInfoProdutor = ({
           telefone: data.telefone || "",
           fidelizacao: data.fidelizacao || "",
           endereco: data.endereco || "",
-          uf: data.uf || "",
-          nomeMunicipio: data.nomeMunicipio || "",
-          nomeRegional: data.nomeRegional || "",
+          estado: data.estado || "",
+          municipio: data.municipio || "",
+          regional: data.regional || "",
         });
 
         // Carrega cidades se tiver UF
-        if (data.uf) {
-          const cidadesFetch = await fetchCitiesByState(data.uf);
+        if (data.estado) {
+          const cidadesFetch = await fetchCitiesByState(data.estado);
           setCidades(cidadesFetch);
           console.log("Cidades carregadas:", cidadesFetch);
         }
@@ -219,9 +219,9 @@ const ModalEditInfoProdutor = ({
         }
       )
       .min(2, "O nome deve ter pelo menos 2 letras"),
-    uf: Yup.string().required("Estado é obrigatório"),
-    nomeMunicipio: Yup.string().required("Município é obrigatório"),
-    nomeRegional: Yup.string().required("Regional é obrigatório"),
+    estado: Yup.string().required("Estado é obrigatório"),
+    municipio: Yup.string().required("Município é obrigatório"),
+    regional: Yup.string().required("Regional é obrigatório"),
   });
 
   const handleTelefoneChange = (e, setFieldValue) => {
@@ -232,8 +232,8 @@ const ModalEditInfoProdutor = ({
   const handleSubmitUpdate = async (values) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/produtores/${produtorId}`,
-        values
+        `http://localhost:8080/produtores/${produtorId}`,
+        values, { headers: { "Content-Type": "application/json" } }
       );
 
       console.log(response.data);
@@ -399,19 +399,19 @@ const ModalEditInfoProdutor = ({
                 {/* Estado */}
                 <div>
                   <label
-                    htmlFor="uf"
+                    htmlFor="estado"
                     className="block text-sm font-medium text-black"
                   >
                     Estado*
                   </label>
                   <Field
                     as="select"
-                    name="uf"
+                    name="estado"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                     onChange={async (e) => {
                       const sigla = e.target.value;
-                      setFieldValue("uf", sigla);
-                      setFieldValue("nomeMunicipio", "");
+                      setFieldValue("estado", sigla);
+                      setFieldValue("municipio", "");
                       if (sigla) {
                         const cidades = await fetchCitiesByState(sigla);
                         setCidades(cidades);
@@ -428,7 +428,7 @@ const ModalEditInfoProdutor = ({
                     ))}
                   </Field>
                   <ErrorMessage
-                    name="uf"
+                    name="estado"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
@@ -436,14 +436,14 @@ const ModalEditInfoProdutor = ({
 
                 <div>
                   <label
-                    htmlFor="nomeMunicipio"
+                    htmlFor="municipio"
                     className="block text-sm font-medium text-black"
                   >
                     Cidade*
                   </label>
                   <Field
                     as="select"
-                    name="nomeMunicipio"
+                    name="municipio"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                   >
                     <option value="">Selecione a cidade</option>
@@ -454,7 +454,7 @@ const ModalEditInfoProdutor = ({
                     ))}
                   </Field>
                   <ErrorMessage
-                    name="nomeMunicipio"
+                    name="municipio"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />
@@ -463,14 +463,14 @@ const ModalEditInfoProdutor = ({
                 {/* Regional */}
                 <div>
                   <label
-                    htmlFor="nomeRegional"
+                    htmlFor="regional"
                     className="block text-sm font-medium text-black"
                   >
                     Regional*
                   </label>
                   <Field
                     as="select"
-                    name="nomeRegional"
+                    name="regional"
                     className="mt-1 block w-full border border-black rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#FF6B00] focus:border-[#FF6B00]"
                   >
                     <option value="">Selecione a regional</option>
@@ -481,7 +481,7 @@ const ModalEditInfoProdutor = ({
                     ))}
                   </Field>
                   <ErrorMessage
-                    name="nomeRegional"
+                    name="regional"
                     component="div"
                     className="text-red-500 text-xs mt-1"
                   />

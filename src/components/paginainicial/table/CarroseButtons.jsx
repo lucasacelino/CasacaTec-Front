@@ -14,17 +14,17 @@ const CarroselButtonsRegionais = ({ UF }) => {
 
   const filterCidades = (regional) => {
     setRegionalSelecionada(regional);
-    const cidades = UF.filter((item) => item.nomeRegional === regional);
+    const cidades = UF.filter((item) => item.regional === regional);
 
     const contagemMunicipios = cidades.reduce((acc, cidade) => {
-      const nomeMunicipio = cidade.nomeMunicipio;
-      acc[nomeMunicipio] = (acc[nomeMunicipio] || 0) + 1;
+      const municipio = cidade.municipio;
+      acc[municipio] = (acc[municipio] || 0) + 1;
       return acc;
     }, {});
 
     const municipiosFiltrados = Object.entries(contagemMunicipios).map(
       ([municipio, qtd]) => ({
-        nomeMunicipio: municipio,
+        municipio: municipio,
         inscritos: qtd,
       })
     );
@@ -33,7 +33,7 @@ const CarroselButtonsRegionais = ({ UF }) => {
   };
 
   const filterRegionaisEstado = [
-    ...new Set(UF.map((item) => item.nomeRegional)),
+    ...new Set(UF.map((item) => item.regional)),
   ];
 
   useEffect(() => {
