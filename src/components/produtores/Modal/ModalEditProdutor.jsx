@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
-const ModalEditInfoProdutor = ({
+const ModalEditProdutor = ({
   produtorId,
   isOpen,
   onClose,
@@ -511,4 +511,4 @@ const ModalEditInfoProdutor = ({
   );
 };
 
-export default ModalEditInfoProdutor;
+export default ModalEditProdutor;

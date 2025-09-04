@@ -1,10 +1,11 @@
 import { useState } from "react";
-import ModalEditInfoProdutor from "../Modal/ModalEditInfoProdutor";
+// import ModalEditInfoProdutor from "../Modal/ModalEditInfoProdutor";
 import ModalExcluirProdutor from "../Modal/ModalExcluirProdutor";
 import ProducaoModalPage from "../../producao/Modal/ProducaoModalPage";
 import NotaFiscalProdutorModalPage from "../../notas_fiscais/Modal/NotaFiscalProdutorModalPage";
+import ModalEditProdutor from "../Modal/ModalEditProdutor";
 
-const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
+const TableDadosProdutores = ({ dados = [], onProdutorAtualizado }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeletOpen, setIsDeletOpen] = useState(false);
   const [isModal, setIsModal] = useState(false);
@@ -198,7 +199,7 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
         </div>
       </div>
 
-      <ModalEditInfoProdutor
+      <ModalEditProdutor
         produtorId={produtorId}
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
@@ -230,4 +231,4 @@ const TableProdutores = ({ dados = [], onProdutorAtualizado }) => {
   );
 };
 
-export default TableProdutores;
+export default TableDadosProdutores;

@@ -11,7 +11,7 @@ const ModalDeleteTecnico = ({ id, isOpen, onClose, onSuccess }) => {
       console.log("Produtor excluido!", response);
       onSuccess();
       onClose();
-      toast.success("Produtor excluído com sucesso!", {
+      toast.success("Técnico excluído com sucesso!", {
         style: {
           padding: "16px",
           color: "#FFFFFF",

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
-import TableProdutores from "../../components/produtores/table/TableProdutores";
+// import TableProdutores from "../../components/produtores/table/TableProdutores";
+import TableDadosProdutores from "../../components/produtores/table/TableProdutores";
 
 const AcompanharProducao = () => {
   
@@ -274,7 +275,7 @@ const AcompanharProducao = () => {
               )}
             </div>
           )}
-          <TableProdutores
+          <TableDadosProdutores
             dados={dadosFiltrados}
             onProdutorAtualizado={handleProdutorAtualizado}
           />
